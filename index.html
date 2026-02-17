@@ -40,7 +40,8 @@
             box-sizing: border-box;
         }
 
-        html, body {
+        html,
+        body {
             overflow-x: hidden;
             width: 100%;
         }
@@ -75,7 +76,8 @@
             top: 100px;
             right: 20px;
             z-index: 10000;
-            max-width: 90%; /* Prevent overflow on mobile */
+            max-width: 90%;
+            /* Prevent overflow on mobile */
         }
 
         .toast {
@@ -128,7 +130,8 @@
 
         .logo {
             font-weight: 900;
-            font-size: 1.5rem; /* Smaller for mobile */
+            font-size: 1.5rem;
+            /* Smaller for mobile */
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -222,7 +225,8 @@
         /* Hero Section */
         .hero {
             background: var(--gradient-hero);
-            padding: 120px 5% 60px; /* Reduced padding for mobile */
+            padding: 120px 5% 60px;
+            /* Reduced padding for mobile */
             position: relative;
             overflow: hidden;
             border-radius: 0 0 30px 30px;
@@ -254,8 +258,15 @@
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-30px) rotate(5deg); }
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-30px) rotate(5deg);
+            }
         }
 
         .hero-content {
@@ -270,7 +281,8 @@
         }
 
         .hero-text h1 {
-            font-size: 3rem; /* Reduced base size */
+            font-size: 3rem;
+            /* Reduced base size */
             font-weight: 900;
             color: white;
             line-height: 1.1;
@@ -343,7 +355,8 @@
             display: flex;
             gap: 30px;
             margin-top: 40px;
-            flex-wrap: wrap; /* KEY FIX: Allows wrapping on mobile */
+            flex-wrap: wrap;
+            /* KEY FIX: Allows wrapping on mobile */
         }
 
         .stat-item {
@@ -428,7 +441,8 @@
             font-family: inherit;
             outline: none;
             background: transparent;
-            min-width: 0; /* Prevents overflow */
+            min-width: 0;
+            /* Prevents overflow */
         }
 
         .search-box button {
@@ -441,7 +455,8 @@
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
-            white-space: nowrap; /* Prevents button breaking */
+            white-space: nowrap;
+            /* Prevents button breaking */
         }
 
         /* Categories */
@@ -479,7 +494,8 @@
             white-space: nowrap;
             box-shadow: var(--shadow-sm);
             color: var(--secondary);
-            flex-shrink: 0; /* Prevents shrinking */
+            flex-shrink: 0;
+            /* Prevents shrinking */
         }
 
         .category-btn.active {
@@ -651,7 +667,8 @@
             }
 
             .hero-image {
-                display: none; /* Hide hero image on tablet/mobile to save space */
+                display: none;
+                /* Hide hero image on tablet/mobile to save space */
             }
 
             .hero-stats {
@@ -666,7 +683,7 @@
                 grid-template-columns: 1fr;
                 text-align: center;
             }
-            
+
             .footer-content {
                 grid-template-columns: 1fr 1fr;
             }
@@ -674,11 +691,13 @@
 
         @media (max-width: 768px) {
             .nav-links a:not(.cart-btn) {
-                display: none; /* Hide nav links on mobile */
+                display: none;
+                /* Hide nav links on mobile */
             }
 
             .hero {
-                padding: 100px 20px 60px; /* Reduced padding */
+                padding: 100px 20px 60px;
+                /* Reduced padding */
                 border-radius: 0 0 20px 20px;
             }
 
@@ -699,22 +718,23 @@
             }
 
             .grid {
-                grid-template-columns: 1fr; /* 1 column grid for cards */
+                grid-template-columns: 1fr;
+                /* 1 column grid for cards */
             }
-            
+
             /* Horizontal Card for Mobile */
             .card {
                 display: flex;
                 flex-direction: row;
                 height: 120px;
             }
-            
+
             .card-img {
                 width: 120px;
                 height: 100%;
                 border-radius: 0;
             }
-            
+
             .card-body {
                 flex: 1;
                 padding: 15px;
@@ -722,12 +742,12 @@
                 flex-direction: column;
                 justify-content: center;
             }
-            
+
             .card-body h3 {
                 font-size: 1rem;
                 margin-bottom: 4px;
             }
-            
+
             .card-body .desc {
                 font-size: 0.75rem;
                 margin-bottom: 5px;
@@ -736,19 +756,20 @@
                 -webkit-box-orient: vertical;
                 overflow: hidden;
             }
-            
+
             .card-rating {
-                display: none; /* Hide rating on small cards */
+                display: none;
+                /* Hide rating on small cards */
             }
-            
+
             .card-footer {
                 margin-top: 5px;
             }
-            
+
             .price {
                 font-size: 1.1rem;
             }
-            
+
             .btn-add {
                 padding: 5px 15px;
                 font-size: 0.8rem;
@@ -766,7 +787,7 @@
             .social-links {
                 justify-content: center;
             }
-            
+
             .footer-bottom {
                 flex-direction: column;
                 text-align: center;
@@ -875,8 +896,7 @@
     <div class="search-section">
         <div class="search-box">
             <i class="fas fa-search"></i>
-            <input type="text" id="search-input" placeholder="Search for biryani, pizza..."
-                oninput="searchFood()">
+            <input type="text" id="search-input" placeholder="Search for biryani, pizza..." oninput="searchFood()">
             <button onclick="searchFood()">Search</button>
         </div>
     </div>
@@ -1116,7 +1136,7 @@
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
-        
+
         function copyCode() {
             navigator.clipboard.writeText('EATLO50');
             showToast('Code copied! EATLO50');
@@ -1139,6 +1159,7 @@
     </script>
 
 </body>
+
 </html>
 ### 2. `cart.html` (Mobile Optimized)
 **Changes:**
@@ -1154,8 +1175,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Your Cart - EatLo</title>
-    <link href="[https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap](https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap)" rel="stylesheet">
-    <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
+    <link
+        href="[https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap](https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap)"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
     <style>
         :root {
             --primary: #ff6b35;
@@ -1163,10 +1187,20 @@
             --success: #06d6a0;
             --light: #f8f9fa;
             --gray: #6c757d;
-            --shadow: 0 5px 15px rgba(0,0,0,0.05);
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background: var(--light); padding-bottom: 20px; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light);
+            padding-bottom: 20px;
+        }
 
         /* Navbar */
         nav {
@@ -1177,12 +1211,27 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
-        .back-btn { font-size: 1.2rem; color: var(--secondary); text-decoration: none; margin-right: 15px; }
-        .page-title { font-size: 1.2rem; font-weight: 700; color: var(--secondary); }
 
-        .container { padding: 20px; max-width: 800px; margin: 0 auto; }
+        .back-btn {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            text-decoration: none;
+            margin-right: 15px;
+        }
+
+        .page-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
 
         /* Cart Items */
         .cart-item {
@@ -1195,6 +1244,7 @@
             gap: 15px;
             box-shadow: var(--shadow);
         }
+
         .item-image {
             width: 70px;
             height: 70px;
@@ -1203,15 +1253,60 @@
             background-position: center;
             background-color: #eee;
         }
-        .item-details { flex: 1; }
-        .item-details h4 { font-size: 1rem; margin-bottom: 4px; color: var(--secondary); }
-        .item-details .price { color: var(--primary); font-weight: 700; }
-        
-        .item-actions { display: flex; align-items: center; gap: 15px; }
-        .qty-control { display: flex; align-items: center; background: #f5f5f5; border-radius: 50px; padding: 5px 10px; }
-        .qty-btn { border: none; background: transparent; font-weight: 700; font-size: 1.1rem; width: 25px; cursor: pointer; color: var(--secondary); }
-        .qty-num { font-weight: 600; font-size: 0.9rem; min-width: 20px; text-align: center; }
-        .remove-btn { color: #ef476f; background: none; border: none; font-size: 1.1rem; cursor: pointer; }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-details h4 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+            color: var(--secondary);
+        }
+
+        .item-details .price {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .qty-control {
+            display: flex;
+            align-items: center;
+            background: #f5f5f5;
+            border-radius: 50px;
+            padding: 5px 10px;
+        }
+
+        .qty-btn {
+            border: none;
+            background: transparent;
+            font-weight: 700;
+            font-size: 1.1rem;
+            width: 25px;
+            cursor: pointer;
+            color: var(--secondary);
+        }
+
+        .qty-num {
+            font-weight: 600;
+            font-size: 0.9rem;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .remove-btn {
+            color: #ef476f;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
 
         /* Summary Section */
         .order-summary {
@@ -1221,15 +1316,57 @@
             box-shadow: var(--shadow);
             margin-top: 20px;
         }
-        .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; color: var(--gray); font-size: 0.9rem; }
-        .summary-row.total { border-top: 1px dashed #ddd; padding-top: 15px; margin-top: 10px; color: var(--secondary); font-weight: 700; font-size: 1.1rem; }
-        .summary-row.total span:last-child { color: var(--primary); }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .summary-row.total {
+            border-top: 1px dashed #ddd;
+            padding-top: 15px;
+            margin-top: 10px;
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .summary-row.total span:last-child {
+            color: var(--primary);
+        }
 
         /* Form */
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-size: 0.8rem; font-weight: 600; color: var(--gray); }
-        .form-group input, .form-group textarea { width: 100%; padding: 12px 15px; border: 1px solid #eee; border-radius: 10px; font-family: inherit; font-size: 0.95rem; outline: none; background: #f9f9f9; }
-        .form-group input:focus { border-color: var(--primary); background: white; }
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--gray);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            background: #f9f9f9;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+            background: white;
+        }
 
         .checkout-btn {
             width: 100%;
@@ -1244,16 +1381,45 @@
             box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
             margin-top: 15px;
         }
-        .checkout-btn:disabled { background: #ccc; box-shadow: none; }
+
+        .checkout-btn:disabled {
+            background: #ccc;
+            box-shadow: none;
+        }
 
         /* Empty State */
-        .empty-cart { text-align: center; padding: 50px 20px; }
-        .empty-cart i { font-size: 3rem; color: #ddd; margin-bottom: 15px; }
-        .empty-cart p { color: var(--gray); margin-bottom: 20px; }
-        .btn-home { display: inline-block; color: var(--primary); font-weight: 600; text-decoration: none; border: 1px solid var(--primary); padding: 10px 25px; border-radius: 50px; }
+        .empty-cart {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .empty-cart i {
+            font-size: 3rem;
+            color: #ddd;
+            margin-bottom: 15px;
+        }
+
+        .empty-cart p {
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+
+        .btn-home {
+            display: inline-block;
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            border: 1px solid var(--primary);
+            padding: 10px 25px;
+            border-radius: 50px;
+        }
 
         @media (min-width: 768px) {
-            .cart-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 30px; }
+            .cart-layout {
+                display: grid;
+                grid-template-columns: 1.5fr 1fr;
+                gap: 30px;
+            }
         }
     </style>
 </head>
@@ -1273,11 +1439,11 @@
 
             <div class="order-summary" id="order-summary" style="display:none;">
                 <h3 style="margin-bottom:15px; font-size:1.1rem;">Payment Details</h3>
-                
+
                 <div class="summary-row"><span>Subtotal</span><span id="subtotal">₹0</span></div>
                 <div class="summary-row"><span>Delivery</span><span>₹40</span></div>
                 <div class="summary-row total"><span>Total</span><span id="total-price">₹0</span></div>
-                
+
                 <hr style="border:0; border-top:1px solid #f0f0f0; margin: 20px 0;">
 
                 <div class="form-group">
@@ -1296,7 +1462,7 @@
                 <button class="checkout-btn" id="checkout-btn" onclick="placeOrder()">Place Order</button>
             </div>
         </div>
-        
+
         <div id="empty-state" class="empty-cart" style="display:none;">
             <i class="fas fa-shopping-basket"></i>
             <h3>Cart is empty</h3>
@@ -1327,13 +1493,13 @@
 
         function renderCart() {
             container.innerHTML = '';
-            
+
             if (cart.length === 0) {
                 document.getElementById('empty-state').style.display = 'block';
                 document.getElementById('order-summary').style.display = 'none';
                 return;
             }
-            
+
             document.getElementById('empty-state').style.display = 'none';
             document.getElementById('order-summary').style.display = 'block';
 
@@ -1360,14 +1526,14 @@
             updateTotals();
         }
 
-        window.updateQty = function(index, change) {
+        window.updateQty = function (index, change) {
             cart[index].quantity = (cart[index].quantity || 1) + change;
             if (cart[index].quantity <= 0) cart.splice(index, 1);
             localStorage.setItem('cart', JSON.stringify(cart));
             renderCart();
         }
 
-        window.removeItem = function(index) {
+        window.removeItem = function (index) {
             cart.splice(index, 1);
             localStorage.setItem('cart', JSON.stringify(cart));
             renderCart();
@@ -1381,7 +1547,7 @@
             document.getElementById('total-price').innerText = '₹' + total;
         }
 
-        window.placeOrder = async function() {
+        window.placeOrder = async function () {
             const name = document.getElementById('name').value.trim();
             const phone = document.getElementById('phone').value.trim();
             const address = document.getElementById('address').value.trim();
@@ -1423,4 +1589,5 @@
         renderCart();
     </script>
 </body>
+
 </html>
