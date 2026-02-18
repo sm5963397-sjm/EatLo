@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Placed - EatLo</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -15,189 +14,155 @@
             --secondary: #1a1a2e;
             --light: #f8f9fa;
             --white: #ffffff;
-            --shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            --gray: #6c757d;
+            --shadow: 0 20px 60px rgba(0,0,0,0.12);
             --radius: 20px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
         }
 
         .success-card {
-            background: var(--white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 60px 50px;
-            text-align: center;
-            max-width: 550px;
-            width: 100%;
-            animation: scaleIn 0.5s ease;
+            background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow);
+            padding: 60px 50px; text-align: center; max-width: 580px; width: 100%;
+            animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         @keyframes scaleIn {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+            from { opacity: 0; transform: scale(0.7); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         .success-icon {
-            width: 140px;
-            height: 140px;
+            width: 140px; height: 140px;
             background: linear-gradient(135deg, var(--success), #05c793);
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-            animation: bounce 0.6s ease 0.3s;
-            box-shadow: 0 15px 40px rgba(6, 214, 160, 0.4);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 35px;
+            box-shadow: 0 15px 40px rgba(6,214,160,0.4);
+            animation: bounce 0.6s ease 0.4s both;
         }
 
         @keyframes bounce {
-
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.1);
-            }
+            0% { transform: scale(0.5); opacity: 0; }
+            60% { transform: scale(1.15); }
+            100% { transform: scale(1); opacity: 1; }
         }
 
-        .success-icon i {
-            font-size: 4rem;
-            color: white;
-        }
+        .success-icon i { font-size: 4rem; color: white; }
 
-        h1 {
-            color: var(--secondary);
-            margin-bottom: 15px;
-            font-size: 2rem;
-        }
+        .emoji { font-size: 2.5rem; display: block; margin-bottom: 10px; }
+
+        h1 { color: var(--secondary); margin-bottom: 12px; font-size: 2rem; font-weight: 800; }
 
         .order-id {
-            background: var(--light);
-            display: inline-block;
-            padding: 15px 35px;
-            border-radius: 50px;
-            margin: 20px 0;
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--primary);
-            letter-spacing: 1px;
+            background: linear-gradient(135deg, #fff5f0, #ffe8e0);
+            display: inline-block; padding: 14px 35px; border-radius: 50px;
+            margin: 20px 0; font-weight: 700; font-size: 1rem; color: var(--primary);
+            letter-spacing: 2px; border: 2px solid rgba(255,107,53,0.2);
         }
 
-        p {
-            color: #666;
-            margin-bottom: 30px;
-            line-height: 1.7;
+        .subtitle {
+            color: var(--gray); margin-bottom: 35px; line-height: 1.7; font-size: 1rem;
         }
 
+        /* Info Box */
         .info-box {
             background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 35px;
-            text-align: left;
+            border-radius: 15px; padding: 25px; margin-bottom: 30px; text-align: left;
+            border-left: 4px solid var(--success);
         }
 
         .info-box h4 {
-            color: var(--success);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.1rem;
+            color: #2e7d32; margin-bottom: 10px;
+            display: flex; align-items: center; gap: 10px; font-size: 1rem;
         }
 
-        .info-box p {
-            margin: 0;
-            font-size: 0.95rem;
+        .info-box p { color: var(--gray); font-size: 0.92rem; line-height: 1.6; margin: 0; }
+
+        /* Delivery Steps */
+        .delivery-steps {
+            display: flex; justify-content: center; gap: 25px;
+            margin-bottom: 35px; flex-wrap: wrap;
         }
 
-        .buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
+        .step {
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
         }
+
+        .step-icon {
+            width: 55px; height: 55px; border-radius: 50%;
+            background: var(--light); display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; color: var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .step:nth-child(1) .step-icon { background: #e3f2fd; color: #1976d2; animation: stepPulse 2s ease 0.5s infinite; }
+        .step:nth-child(2) .step-icon { background: #fff3e0; color: #f57c00; animation: stepPulse 2s ease 1s infinite; }
+        .step:nth-child(3) .step-icon { background: #e8f5e9; color: var(--success); animation: stepPulse 2s ease 1.5s infinite; }
+
+        @keyframes stepPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .step span { font-size: 0.78rem; color: var(--gray); font-weight: 500; }
+
+        /* Buttons */
+        .buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
 
         .btn {
-            padding: 16px 35px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            padding: 16px 32px; border-radius: 50px; text-decoration: none;
+            font-weight: 600; transition: all 0.3s ease;
+            display: inline-flex; align-items: center; gap: 10px; font-family: inherit; font-size: 0.95rem;
         }
+
+        .btn:hover { transform: translateY(-4px); }
 
         .btn-primary {
             background: linear-gradient(135deg, var(--primary), #f7931e);
-            color: white;
-            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+            color: white; box-shadow: 0 10px 30px rgba(255,107,53,0.3);
         }
 
-        .btn-secondary {
-            background: var(--light);
-            color: var(--secondary);
+        .btn-primary:hover { box-shadow: 0 15px 40px rgba(255,107,53,0.4); }
+
+        .btn-secondary { background: var(--light); color: var(--secondary); }
+        .btn-secondary:hover { background: #e9ecef; }
+
+        /* Countdown */
+        .countdown {
+            margin-top: 25px; font-size: 0.85rem; color: var(--gray);
         }
 
-        .btn:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
+        .countdown span { color: var(--primary); font-weight: 600; }
 
         /* Confetti */
         .confetti {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 1000;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; overflow: hidden; z-index: 0;
         }
 
         .confetti-piece {
-            position: absolute;
-            width: 12px;
-            height: 24px;
-            top: -30px;
-            animation: confetti-fall 4s ease-in-out forwards;
+            position: absolute; width: 10px; height: 20px;
+            top: -30px; border-radius: 3px;
+            animation: confettiFall linear forwards;
         }
 
-        @keyframes confetti-fall {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 1;
-            }
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg) translateX(var(--drift)); opacity: 0; }
+        }
 
-            100% {
-                transform: translateY(100vh) rotate(720deg);
-                opacity: 0;
-            }
+        @media (max-width: 500px) {
+            .success-card { padding: 40px 25px; }
+            h1 { font-size: 1.6rem; }
+            .delivery-steps { gap: 15px; }
         }
     </style>
 </head>
@@ -211,16 +176,35 @@
             <i class="fas fa-check"></i>
         </div>
 
-        <h1>Order Placed Successfully! 🎉</h1>
+        <span class="emoji">🎉</span>
+        <h1>Order Placed Successfully!</h1>
 
-        <div class="order-id" id="order-id">#ELO123456</div>
+        <div class="order-id" id="order-id">Loading...</div>
 
-        <p>Thank you for ordering from EatLo! Your delicious food is being prepared and will be delivered soon.</p>
+        <p class="subtitle">
+            Thank you for ordering from <strong>EatLo</strong>!<br>
+            Your delicious food is being prepared and will arrive soon.
+        </p>
+
+        <!-- Delivery Steps -->
+        <div class="delivery-steps">
+            <div class="step">
+                <div class="step-icon"><i class="fas fa-check-circle"></i></div>
+                <span>Order Confirmed</span>
+            </div>
+            <div class="step">
+                <div class="step-icon"><i class="fas fa-fire"></i></div>
+                <span>Preparing</span>
+            </div>
+            <div class="step">
+                <div class="step-icon"><i class="fas fa-motorcycle"></i></div>
+                <span>On the Way</span>
+            </div>
+        </div>
 
         <div class="info-box">
             <h4><i class="fas fa-clock"></i> Estimated Delivery Time</h4>
-            <p>Your order will arrive in approximately <strong>30-45 minutes</strong>. You'll receive updates on your
-                phone.</p>
+            <p>Your order will arrive in approximately <strong>30–45 minutes</strong>. Track your order status in the My Orders section using your phone number.</p>
         </div>
 
         <div class="buttons">
@@ -231,35 +215,64 @@
                 <i class="fas fa-home"></i> Back to Home
             </a>
         </div>
+
+        <div class="countdown">
+            Redirecting to home in <span id="countdown">10</span> seconds...
+        </div>
     </div>
 
     <script>
-        // Get Order ID from URL
+        // FIX: Display order ID from URL param
         const params = new URLSearchParams(window.location.search);
         const orderId = params.get('id');
+        const orderIdEl = document.getElementById('order-id');
+
         if (orderId) {
-            document.getElementById('order-id').innerText = '#' + orderId;
+            orderIdEl.innerText = '#' + orderId.slice(-10).toUpperCase();
+        } else {
+            orderIdEl.innerText = '#ELO' + Date.now().toString().slice(-6);
         }
 
-        // Create Confetti
+        // Confetti with drift
         function createConfetti() {
             const container = document.getElementById('confetti');
-            const colors = ['#ff6b35', '#06d6a0', '#ffd166', '#118ab2', '#ef476f', '#f7931e'];
+            const colors = ['#ff6b35', '#06d6a0', '#ffd166', '#118ab2', '#ef476f', '#f7931e', '#a29bfe'];
+            const shapes = ['rectangle', 'circle'];
 
-            for (let i = 0; i < 60; i++) {
+            for (let i = 0; i < 80; i++) {
                 const piece = document.createElement('div');
                 piece.className = 'confetti-piece';
+                const isCircle = Math.random() > 0.5;
+                if (isCircle) {
+                    piece.style.width = '10px';
+                    piece.style.height = '10px';
+                    piece.style.borderRadius = '50%';
+                }
                 piece.style.left = Math.random() * 100 + '%';
                 piece.style.background = colors[Math.floor(Math.random() * colors.length)];
                 piece.style.animationDelay = Math.random() * 3 + 's';
-                piece.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                piece.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                piece.style.setProperty('--drift', (Math.random() * 200 - 100) + 'px');
                 container.appendChild(piece);
             }
+
+            // Clean up confetti after animations
+            setTimeout(() => { container.innerHTML = ''; }, 7000);
         }
 
         createConfetti();
+
+        // FIX: Countdown timer to redirect
+        let count = 10;
+        const countEl = document.getElementById('countdown');
+        const timer = setInterval(function() {
+            count--;
+            countEl.innerText = count;
+            if (count <= 0) {
+                clearInterval(timer);
+                window.location.href = 'index.html';
+            }
+        }, 1000);
     </script>
-
 </body>
-
 </html>
