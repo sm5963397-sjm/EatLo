@@ -599,7 +599,17 @@
             .stats-grid { grid-template-columns: 1fr; }
         }
     </style>
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "36b920e3-84b0-4960-8c9f-e7e0a9da82b9",
+    });
+  });
+</script>
 </head>
+
 
 <body>
 
