@@ -599,7 +599,7 @@
             .stats-grid { grid-template-columns: 1fr; }
         }
     </style>
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <!-- <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
   window.OneSignalDeferred = window.OneSignalDeferred || [];
   OneSignalDeferred.push(async function(OneSignal) {
@@ -607,7 +607,8 @@
       appId: "36b920e3-84b0-4960-8c9f-e7e0a9da82b9",
     });
   });
-</script>
+</script> -->
+
 </head>
 
 
@@ -901,7 +902,44 @@
         const ADMIN_PASSWORD = "admin123";
 
         firebase.initializeApp(firebaseConfig);
+
         const db = firebase.firestore();
+        const messaging = firebase.messaging();
+
+    async function initFCM() {
+        try {
+            // register service worker
+            if ('serviceWorker' in navigator) {
+                await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+            }
+
+            const permission = await Notification.requestPermission();
+            if (permission !== "granted") return;
+
+            const token = await messaging.getToken({
+                vapidKey: "BEm5wpGhA97kgl-VFJAkHfv6SNssHS5mCUa5AGmCs8ZJ4AeOUpV4UH2REOEVmfjhvJmM3mx7t0WA"
+            });
+
+            if (!token) return;
+
+            console.log("ADMIN FCM TOKEN:", token);
+
+            // save admin token in Firestore
+            await db.collection("adminTokens").doc("mainAdmin").set({
+                token: token,
+                updatedAt: new Date()
+            });
+
+        } catch (err) {
+            console.error("FCM init error:", err);
+        }
+    }
+
+    // receive foreground notifications
+    messaging.onMessage((payload) => {
+        console.log("Notification received:", payload);
+        showToast("New Order", "You received a new order", "success");
+    });
 
         let menu = [];
         let orders = [];
