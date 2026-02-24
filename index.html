@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-messaging-compat.js"></script>
 
@@ -81,7 +80,6 @@
             right: 20px;
             z-index: 10000;
             max-width: 90%;
-            /* Prevent overflow on mobile */
         }
 
         .toast {
@@ -135,7 +133,6 @@
         .logo {
             font-weight: 900;
             font-size: 1.5rem;
-            /* Smaller for mobile */
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -216,21 +213,10 @@
             border: 2px solid white;
         }
 
-        /* Mobile Menu */
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--secondary);
-            cursor: pointer;
-        }
-
         /* Hero Section */
         .hero {
             background: var(--gradient-hero);
             padding: 120px 5% 60px;
-            /* Reduced padding for mobile */
             position: relative;
             overflow: hidden;
             border-radius: 0 0 30px 30px;
@@ -262,15 +248,8 @@
         }
 
         @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0) rotate(0deg);
-            }
-
-            50% {
-                transform: translateY(-30px) rotate(5deg);
-            }
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(5deg); }
         }
 
         .hero-content {
@@ -286,7 +265,6 @@
 
         .hero-text h1 {
             font-size: 3rem;
-            /* Reduced base size */
             font-weight: 900;
             color: white;
             line-height: 1.1;
@@ -336,12 +314,6 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
         }
 
-        .btn-hero-secondary {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-        }
-
         .hero-image {
             position: relative;
             display: flex;
@@ -353,65 +325,6 @@
             max-width: 500px;
             filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.3));
             animation: heroFloat 4s ease-in-out infinite;
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 30px;
-            margin-top: 40px;
-            flex-wrap: wrap;
-            /* KEY FIX: Allows wrapping on mobile */
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-item h3 {
-            font-size: 2rem;
-            font-weight: 800;
-            color: white;
-        }
-
-        .stat-item p {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        /* Features Section */
-        .features {
-            padding: 60px 5%;
-            background: white;
-        }
-
-        .features-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 30px;
-        }
-
-        .feature-card {
-            text-align: center;
-            padding: 30px 20px;
-            border-radius: var(--radius);
-            background: var(--light);
-            transition: var(--transition);
-        }
-
-        .feature-icon {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 20px;
-            background: var(--gradient-primary);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            color: white;
-            box-shadow: var(--shadow-primary);
         }
 
         /* Search Section */
@@ -446,7 +359,6 @@
             outline: none;
             background: transparent;
             min-width: 0;
-            /* Prevents overflow */
         }
 
         .search-box button {
@@ -460,7 +372,6 @@
             cursor: pointer;
             transition: var(--transition);
             white-space: nowrap;
-            /* Prevents button breaking */
         }
 
         /* Categories */
@@ -499,7 +410,6 @@
             box-shadow: var(--shadow-sm);
             color: var(--secondary);
             flex-shrink: 0;
-            /* Prevents shrinking */
         }
 
         .category-btn.active {
@@ -532,6 +442,55 @@
             gap: 10px;
         }
 
+        /* ===== STORE & VENDOR STYLING ===== */
+        .store-section {
+            margin-bottom: 50px;
+            background: white;
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .store-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .store-header h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .store-header h2 i {
+            color: var(--primary);
+        }
+
+        .store-badge {
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .store-badge.open {
+            background: rgba(6, 214, 160, 0.15);
+            color: var(--success);
+        }
+
+        .store-badge.closed {
+            background: rgba(239, 71, 111, 0.15);
+            color: var(--danger);
+        }
+
         /* Grid */
         .grid {
             display: grid;
@@ -542,10 +501,16 @@
         /* Card */
         .card {
             background: white;
-            border-radius: var(--radius);
+            border-radius: var(--radius-sm);
             overflow: hidden;
-            box-shadow: var(--shadow-sm);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             transition: var(--transition);
+            border: 1px solid var(--light);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-sm);
         }
 
         .card-img {
@@ -601,31 +566,68 @@
             transition: var(--transition);
         }
 
-        /* Offers Section */
-        .offers-section {
-            padding: 60px 5%;
-            background: var(--gradient-secondary);
-            margin-top: 40px;
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 26, 46, 0.3);
         }
 
-        .offers-content {
-            max-width: 1400px;
+        /* Disabled styles for closed stores */
+        .card.closed-card .card-img {
+            filter: grayscale(100%);
+            opacity: 0.6;
+        }
+        
+        .card.closed-card h3, 
+        .card.closed-card .price, 
+        .card.closed-card .card-category {
+            color: var(--gray);
+        }
+
+        .card.closed-card .btn-add {
+            background: #e0e0e0;
+            color: #999;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .card.closed-card .btn-add:hover {
+            transform: none;
+        }
+
+
+        /* Features Section */
+        .features {
+            padding: 60px 5%;
+            background: white;
+        }
+
+        .features-grid {
+            max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: var(--radius);
+            background: var(--light);
+            transition: var(--transition);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            background: var(--gradient-primary);
+            border-radius: 20px;
+            display: flex;
             align-items: center;
-        }
-
-        .offers-text h2 {
-            font-size: 2.5rem;
+            justify-content: center;
+            font-size: 1.8rem;
             color: white;
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-
-        .offers-text h2 span {
-            color: var(--primary);
+            box-shadow: var(--shadow-primary);
         }
 
         /* Footer */
@@ -672,20 +674,10 @@
 
             .hero-image {
                 display: none;
-                /* Hide hero image on tablet/mobile to save space */
-            }
-
-            .hero-stats {
-                justify-content: center;
             }
 
             .features-grid {
                 grid-template-columns: repeat(2, 1fr);
-            }
-
-            .offers-content {
-                grid-template-columns: 1fr;
-                text-align: center;
             }
 
             .footer-content {
@@ -696,12 +688,10 @@
         @media (max-width: 768px) {
             .nav-links a:not(.cart-btn) {
                 display: none;
-                /* Hide nav links on mobile */
             }
 
             .hero {
                 padding: 100px 20px 60px;
-                /* Reduced padding */
                 border-radius: 0 0 20px 20px;
             }
 
@@ -709,24 +699,16 @@
                 font-size: 2.2rem;
             }
 
-            .hero-stats {
-                gap: 20px;
-            }
-
-            .stat-item h3 {
-                font-size: 1.8rem;
-            }
-
             .features-grid {
                 grid-template-columns: 1fr;
             }
 
+            .store-section { padding: 20px 15px; }
+
             .grid {
                 grid-template-columns: 1fr;
-                /* 1 column grid for cards */
             }
 
-            /* Horizontal Card for Mobile */
             .card {
                 display: flex;
                 flex-direction: row;
@@ -761,11 +743,6 @@
                 overflow: hidden;
             }
 
-            .card-rating {
-                display: none;
-                /* Hide rating on small cards */
-            }
-
             .card-footer {
                 margin-top: 5px;
             }
@@ -777,10 +754,6 @@
             .btn-add {
                 padding: 5px 15px;
                 font-size: 0.8rem;
-            }
-
-            .offers-text h2 {
-                font-size: 2rem;
             }
 
             .footer-content {
@@ -854,7 +827,7 @@
     <div class="search-section">
         <div class="search-box">
             <i class="fas fa-search"></i>
-            <input type="text" id="search-input" placeholder="Search for biryani, pizza..." oninput="searchFood()">
+            <input type="text" id="search-input" placeholder="Search for biryani, pizza or store name..." oninput="searchFood()">
             <button onclick="searchFood()">Search</button>
         </div>
     </div>
@@ -891,13 +864,10 @@
     <div class="container" id="menu">
         <div class="section-header">
             <h2 class="section-title"><i class="fas fa-fire"></i> Popular Dishes</h2>
-            <a href="offers.html" class="view-all-btn">
-                View All <i class="fas fa-arrow-right"></i>
-            </a>
         </div>
 
         <div id="menu-message"></div>
-        <div class="grid" id="menu-grid"></div>
+        <div id="menu-grid"></div>
     </div>
 
     <section class="features">
@@ -933,7 +903,6 @@
         </div>
     </section>
 
-
     <footer>
         <div class="footer-content">
             <div class="footer-brand">
@@ -966,7 +935,7 @@
     </footer>
 
     <script type="module">
-        // Import Firebase SDKs
+        // Import Firebase SDKs (Updated to include getDocs and collection)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
@@ -985,75 +954,120 @@
         const db = getFirestore(app);
 
         // Global Variables
-        const grid = document.getElementById('menu-grid');
-        const messageDiv = document.getElementById('menu-message');
         let menuItems = [];
+        let storesList = [];
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-        // ========== LOAD MENU (FROM FIREBASE) ==========
-        async function loadMenu() {
+        // ========== LOAD DATA (STORES & MENU) ==========
+        async function loadData() {
             try {
-                const querySnapshot = await getDocs(collection(db, "menuItems"));
+                // 1. Fetch Stores List (To check if they are open/closed)
+                const storesSnap = await getDocs(collection(db, "stores"));
+                storesList = [];
+                storesSnap.forEach(doc => storesList.push({id: doc.id, ...doc.data()}));
+
+                // 2. Fetch Menu Items
+                const menuSnap = await getDocs(collection(db, "menuItems"));
                 menuItems = [];
-                querySnapshot.forEach((doc) => {
-                    menuItems.push(doc.data());
+                menuSnap.forEach((doc) => {
+                    let data = doc.data();
+                    data.id = doc.id; // Assign ID so we can track the exact item
+                    menuItems.push(data);
                 });
 
+                // Fallback to local storage if empty
                 if (menuItems.length === 0) {
                     const rawData = localStorage.getItem('menuItems');
                     if (rawData) menuItems = JSON.parse(rawData);
                 }
 
-                renderMenu(menuItems);
+                renderGroupedMenu(menuItems);
             } catch (e) {
-                console.error("Error loading menu from Firebase:", e);
+                console.error("Error fetching data:", e);
                 const rawData = localStorage.getItem('menuItems');
                 if (rawData) {
                     menuItems = JSON.parse(rawData);
-                    renderMenu(menuItems);
+                    renderGroupedMenu(menuItems);
                 }
             }
         }
 
-        // ========== RENDER MENU ==========
-        function renderMenu(items) {
-            grid.innerHTML = '';
+        // ========== RENDER GROUPED MENU ==========
+        function renderGroupedMenu(itemsToRender) {
+            const gridContainer = document.getElementById('menu-grid');
+            const messageDiv = document.getElementById('menu-message');
+            gridContainer.innerHTML = '';
             messageDiv.innerHTML = '';
 
-            if (!items || items.length === 0) {
+            if (!itemsToRender || itemsToRender.length === 0) {
                 messageDiv.innerHTML = `
-                    <div class="message">
-                        <div class="message-icon"><i class="fas fa-utensils"></i></div>
+                    <div class="message" style="text-align:center; padding:40px;">
+                        <div class="message-icon" style="font-size:3rem; color:#ddd; margin-bottom:15px;"><i class="fas fa-utensils"></i></div>
                         <h3>No Items Found</h3>
-                        <p>The menu is empty.</p>
+                        <p style="color:var(--gray);">No menu items match your search.</p>
                     </div>
                 `;
                 return;
             }
 
-            items.forEach((item, index) => {
-                const imgUrl = item.image || 'https://via.placeholder.com/400x300/ff6b35/ffffff?text=🍔+Yummy';
-                const originalPrice = Math.round(item.price * 1.2);
-
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    ${item.badge ? `<span class="card-badge">${item.badge}</span>` : ''}
-                    <div class="card-img" style="background-image: url('${imgUrl}')"></div>
-                    <div class="card-body">
-                        <span class="card-category">${item.category || 'Food'}</span>
-                        <h3>${item.name}</h3>
-                        <p class="desc">${item.description || 'Delicious food prepared with love'}</p>
-                        <div class="card-footer">
-                            <span class="price">₹${item.price}</span>
-                            <button class="btn-add" onclick="addToCart(${index})">
-                                <i class="fas fa-plus"></i> Add
-                            </button>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
+            // Group items by storeName
+            const grouped = {};
+            itemsToRender.forEach(item => {
+                const sName = item.storeName || 'Other Kitchens';
+                if(!grouped[sName]) grouped[sName] = [];
+                grouped[sName].push(item);
             });
+
+            // Build HTML for each Store
+            for(const [storeName, items] of Object.entries(grouped)) {
+                
+                // Find store details to see if it's open or closed
+                const storeDetails = storesList.find(s => s.name === storeName) || { isOpen: true }; 
+                const isOpen = storeDetails.isOpen !== false; // defaults to true
+                
+                const badgeClass = isOpen ? 'open' : 'closed';
+                const badgeText = isOpen ? 'OPEN' : 'CLOSED';
+
+                let storeHtml = `
+                    <div class="store-section">
+                        <div class="store-header">
+                            <h2><i class="fas fa-store"></i> ${storeName}</h2>
+                            <span class="store-badge ${badgeClass}">${badgeText}</span>
+                        </div>
+                        <div class="grid">
+                `;
+
+                // Add Items for this Store
+                items.forEach((item) => {
+                    const imgUrl = item.image || 'https://via.placeholder.com/400x300/ff6b35/ffffff?text=🍔+Yummy';
+                    
+                    // If store is closed, we add 'closed-card' class and disable the add button
+                    const cardClass = isOpen ? '' : 'closed-card';
+                    const buttonState = isOpen ? `onclick="addToCart('${item.id}')"` : 'disabled';
+                    const btnIcon = isOpen ? '<i class="fas fa-plus"></i> Add' : 'Closed';
+
+                    storeHtml += `
+                        <div class="card ${cardClass}">
+                            ${item.badge ? `<span class="card-badge" style="position:absolute; background:var(--primary); color:white; padding:5px 10px; border-radius:0 10px 0 10px; font-size:0.8rem; font-weight:bold; z-index:10;">${item.badge}</span>` : ''}
+                            <div class="card-img" style="background-image: url('${imgUrl}')"></div>
+                            <div class="card-body">
+                                <span class="card-category">${item.category || 'Food'}</span>
+                                <h3>${item.name}</h3>
+                                <p class="desc" style="color:var(--gray); font-size:0.9rem; margin-bottom:15px;">${item.description || 'Delicious food prepared with love'}</p>
+                                <div class="card-footer">
+                                    <span class="price">₹${item.price}</span>
+                                    <button class="btn-add" ${buttonState}>
+                                        ${btnIcon}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                storeHtml += `</div></div>`; // Close grid and store-section
+                gridContainer.innerHTML += storeHtml;
+            }
         }
 
         // ========== SEARCH & FILTER ==========
@@ -1061,28 +1075,32 @@
             const query = document.getElementById('search-input').value.toLowerCase();
             const filtered = menuItems.filter(item =>
                 item.name.toLowerCase().includes(query) ||
-                (item.category && item.category.toLowerCase().includes(query))
+                (item.category && item.category.toLowerCase().includes(query)) ||
+                (item.storeName && item.storeName.toLowerCase().includes(query))
             );
-            renderMenu(filtered);
+            renderGroupedMenu(filtered);
         }
 
         function filterCategory(category, btn) {
             document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             if (category === 'all') {
-                renderMenu(menuItems);
+                renderGroupedMenu(menuItems);
             } else {
                 const filtered = menuItems.filter(item =>
-                    (item.category && item.category.toLowerCase() === category) ||
-                    item.name.toLowerCase().includes(category)
+                    (item.category && item.category.toLowerCase() === category.toLowerCase()) ||
+                    item.name.toLowerCase().includes(category.toLowerCase())
                 );
-                renderMenu(filtered);
+                renderGroupedMenu(filtered);
             }
         }
 
         // ========== CART LOGIC ==========
-        function addToCart(index) {
-            const item = menuItems[index];
+        function addToCart(itemId) {
+            // Find item by ID instead of index
+            const item = menuItems.find(m => m.id === itemId);
+            if(!item) return;
+
             const existingIndex = cart.findIndex(c => c.name === item.name);
             if (existingIndex !== -1) {
                 cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
@@ -1112,16 +1130,10 @@
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        function copyCode() {
-            navigator.clipboard.writeText('EATLO50');
-            showToast('Code copied! EATLO50');
-        }
-
         // Expose functions for onclick
         window.searchFood = searchFood;
         window.filterCategory = filterCategory;
         window.addToCart = addToCart;
-        window.copyCode = copyCode;
 
         window.addEventListener('storage', () => {
             cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -1129,447 +1141,12 @@
         });
 
         // Initialize
-        loadMenu();
+        loadData(); // Fetches and groups items perfectly!
         updateCartCount();
     </script>
 
-</body>
-
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Your Cart - EatLo</title>
-    <link
-        href="[https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap](https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap)"
-        rel="stylesheet">
-    <link rel="stylesheet"
-        href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
-    <style>
-        :root {
-            --primary: #ff6b35;
-            --secondary: #1a1a2e;
-            --success: #06d6a0;
-            --light: #f8f9fa;
-            --gray: #6c757d;
-            --shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: var(--light);
-            padding-bottom: 20px;
-        }
-
-        /* Navbar */
-        nav {
-            background: white;
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .back-btn {
-            font-size: 1.2rem;
-            color: var(--secondary);
-            text-decoration: none;
-            margin-right: 15px;
-        }
-
-        .page-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--secondary);
-        }
-
-        .container {
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        /* Cart Items */
-        .cart-item {
-            background: white;
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            box-shadow: var(--shadow);
-        }
-
-        .item-image {
-            width: 70px;
-            height: 70px;
-            border-radius: 10px;
-            background-size: cover;
-            background-position: center;
-            background-color: #eee;
-        }
-
-        .item-details {
-            flex: 1;
-        }
-
-        .item-details h4 {
-            font-size: 1rem;
-            margin-bottom: 4px;
-            color: var(--secondary);
-        }
-
-        .item-details .price {
-            color: var(--primary);
-            font-weight: 700;
-        }
-
-        .item-actions {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .qty-control {
-            display: flex;
-            align-items: center;
-            background: #f5f5f5;
-            border-radius: 50px;
-            padding: 5px 10px;
-        }
-
-        .qty-btn {
-            border: none;
-            background: transparent;
-            font-weight: 700;
-            font-size: 1.1rem;
-            width: 25px;
-            cursor: pointer;
-            color: var(--secondary);
-        }
-
-        .qty-num {
-            font-weight: 600;
-            font-size: 0.9rem;
-            min-width: 20px;
-            text-align: center;
-        }
-
-        .remove-btn {
-            color: #ef476f;
-            background: none;
-            border: none;
-            font-size: 1.1rem;
-            cursor: pointer;
-        }
-
-        /* Summary Section */
-        .order-summary {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: var(--shadow);
-            margin-top: 20px;
-        }
-
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-
-        .summary-row.total {
-            border-top: 1px dashed #ddd;
-            padding-top: 15px;
-            margin-top: 10px;
-            color: var(--secondary);
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .summary-row.total span:last-child {
-            color: var(--primary);
-        }
-
-        /* Form */
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--gray);
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #eee;
-            border-radius: 10px;
-            font-family: inherit;
-            font-size: 0.95rem;
-            outline: none;
-            background: #f9f9f9;
-        }
-
-        .form-group input:focus {
-            border-color: var(--primary);
-            background: white;
-        }
-
-        .checkout-btn {
-            width: 100%;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
-            margin-top: 15px;
-        }
-
-        .checkout-btn:disabled {
-            background: #ccc;
-            box-shadow: none;
-        }
-
-        /* Empty State */
-        .empty-cart {
-            text-align: center;
-            padding: 50px 20px;
-        }
-
-        .empty-cart i {
-            font-size: 3rem;
-            color: #ddd;
-            margin-bottom: 15px;
-        }
-
-        .empty-cart p {
-            color: var(--gray);
-            margin-bottom: 20px;
-        }
-
-        .btn-home {
-            display: inline-block;
-            color: var(--primary);
-            font-weight: 600;
-            text-decoration: none;
-            border: 1px solid var(--primary);
-            padding: 10px 25px;
-            border-radius: 50px;
-        }
-
-        @media (min-width: 768px) {
-            .cart-layout {
-                display: grid;
-                grid-template-columns: 1.5fr 1fr;
-                gap: 30px;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-
-
-    <div class="container">
-        <div class="cart-layout">
-            <div id="cart-section">
-                <div id="cart-items"></div>
-            </div>
-
-            <div class="order-summary" id="order-summary" style="display:none;">
-                <h3 style="margin-bottom:15px; font-size:1.1rem;">Payment Details</h3>
-
-                <div class="summary-row"><span>Subtotal</span><span id="subtotal">₹0</span></div>
-                <div class="summary-row"><span>Delivery</span><span>₹40</span></div>
-                <div class="summary-row total"><span>Total</span><span id="total-price">₹0</span></div>
-
-                <hr style="border:0; border-top:1px solid #f0f0f0; margin: 20px 0;">
-
-                <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" id="name" placeholder="Full Name">
-                </div>
-                <div class="form-group">
-                    <label>Phone</label>
-                    <input type="tel" id="phone" placeholder="10-digit Number" maxlength="10">
-                </div>
-                <div class="form-group">
-                    <label>Address</label>
-                    <textarea id="address" placeholder="Full Address" rows="2"></textarea>
-                </div>
-
-                <button class="checkout-btn" id="checkout-btn" onclick="placeOrder()">Place Order</button>
-            </div>
-        </div>
-
-        <div id="empty-state" class="empty-cart" style="display:none;">
-            <i class="fas fa-shopping-basket"></i>
-            <h3>Cart is empty</h3>
-            <p>Add some delicious items to get started!</p>
-            <a href="index.html" class="btn-home">Browse Menu</a>
-        </div>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from "[https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js](https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js)";
-        import { getFirestore, collection, addDoc } from "[https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js](https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js)";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyA9ow668puMztfqJcfAHkJcXXBlWjWFIx8",
-            authDomain: "eatlo-ec2f6.firebaseapp.com",
-            projectId: "eatlo-ec2f6",
-            storageBucket: "eatlo-ec2f6.firebasestorage.app",
-            messagingSenderId: "298601218259",
-            appId: "1:298601218259:web:d8b54f5322139f42881426"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const container = document.getElementById('cart-items');
-        const deliveryFee = 40;
-
-        function renderCart() {
-            container.innerHTML = '';
-
-            if (cart.length === 0) {
-                document.getElementById('empty-state').style.display = 'block';
-                document.getElementById('order-summary').style.display = 'none';
-                return;
-            }
-
-            document.getElementById('empty-state').style.display = 'none';
-            document.getElementById('order-summary').style.display = 'block';
-
-            cart.forEach((item, index) => {
-                const qty = item.quantity || 1;
-                container.innerHTML += `
-                    <div class="cart-item">
-                        <div class="item-image" style="background-image: url('${item.image || ''}')"></div>
-                        <div class="item-details">
-                            <h4>${item.name}</h4>
-                            <div class="item-price">₹${item.price * qty}</div>
-                        </div>
-                        <div class="item-actions">
-                            <div class="qty-control">
-                                <button class="qty-btn" onclick="updateQty(${index}, -1)">-</button>
-                                <span class="qty-num">${qty}</span>
-                                <button class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
-                            </div>
-                            <button class="remove-btn" onclick="removeItem(${index})"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                    </div>
-                `;
-            });
-            updateTotals();
-        }
-
-        window.updateQty = function (index, change) {
-            cart[index].quantity = (cart[index].quantity || 1) + change;
-            if (cart[index].quantity <= 0) cart.splice(index, 1);
-            localStorage.setItem('cart', JSON.stringify(cart));
-            renderCart();
-        }
-
-        window.removeItem = function (index) {
-            cart.splice(index, 1);
-            localStorage.setItem('cart', JSON.stringify(cart));
-            renderCart();
-        }
-
-        function updateTotals() {
-            let subtotal = 0;
-            cart.forEach(item => subtotal += item.price * (item.quantity || 1));
-            const total = subtotal + deliveryFee;
-            document.getElementById('subtotal').innerText = '₹' + subtotal;
-            document.getElementById('total-price').innerText = '₹' + total;
-        }
-
-        window.placeOrder = async function () {
-            const name = document.getElementById('name').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-            const address = document.getElementById('address').value.trim();
-            const btn = document.getElementById('checkout-btn');
-
-            if (!name || !phone || !address) {
-                alert("Please fill all fields");
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerText = "Placing Order...";
-
-            let subtotal = 0;
-            cart.forEach(item => subtotal += item.price * (item.quantity || 1));
-            const total = subtotal + deliveryFee;
-
-            const newOrder = {
-                name, phone, address, items: cart,
-                subtotal, deliveryFee, total,
-                status: 'Confirmed',
-                createdAt: new Date().toISOString(),
-                date: new Date().toLocaleString('en-IN')
-            };
-
-            try {
-                const docRef = await addDoc(collection(db, "orders"), newOrder);
-                localStorage.setItem('customerPhone', phone);
-                localStorage.removeItem('cart');
-                window.location.href = 'order-success.html?id=' + docRef.id;
-            } catch (e) {
-                console.error(e);
-                alert("Order failed!");
-                btn.disabled = false;
-                btn.innerText = "Place Order";
-            }
-        }
-
-        renderCart();
-    </script>
-
     <script>
-        // 1️⃣ Firebase Config
-        const firebaseConfig = {
-            apiKey: "AIzaSyXXXXX-XXXXXX-XXXXXX",   // <-- Replace with your API Key
-            authDomain: "eatlo-xxxx.firebaseapp.com",
-            projectId: "eatlo-xxxx",
-            storageBucket: "eatlo-xxxx.appspot.com",
-            messagingSenderId: "1234567890",
-            appId: "1:1234567890:web:abcdef123456",
-        };
-
-        // 2️⃣ Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-
-        // 3️⃣ Service Worker Register
+        // 3️⃣ Service Worker Register (Using your original setup)
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/firebase-messaging-sw.js')
                 .then((registration) => {
@@ -1579,34 +1156,7 @@
                     console.log('Service Worker registration failed:', err);
                 });
         }
-
-        // 4️⃣ Firebase Messaging
-        const messaging = firebase.messaging();
-
-        // 5️⃣ Ask permission & get device token
-        messaging.requestPermission()
-            .then(() => messaging.getToken({ vapidKey: "YOUR_WEB_PUSH_CERTIFICATE_KEY_PAIR" }))
-            .then((token) => {
-                console.log('Device token:', token);
-                // Ye token Firestore me save kar do
-            })
-            .catch((err) => console.log('Permission denied', err));
-
-        // 6️⃣ Handle foreground notifications
-        messaging.onMessage((payload) => {
-            console.log('Message received:', payload);
-            const notificationTitle = payload.notification.title;
-            const notificationOptions = {
-                body: payload.notification.body,
-                icon: '/logo.png'  // Tumhara logo path
-            };
-            if (Notification.permission === "granted") {
-                new Notification(notificationTitle, notificationOptions);
-            }
-        });
     </script>
 
 </body>
-
 </html>
-
