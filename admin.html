@@ -195,6 +195,47 @@
         .toast-content h4 { font-size: 0.95rem; margin-bottom: 3px; }
         .toast-content p { font-size: 0.85rem; color: var(--gray); }
 
+        /* ===== NOTIFICATION BELL ===== */
+        .notif-btn {
+            position: relative;
+            background: var(--white);
+            border: 2px solid var(--light);
+            width: 50px; height: 50px;
+            border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 1.2rem; color: var(--secondary);
+            transition: var(--transition); box-shadow: var(--shadow-sm);
+        }
+        .notif-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .notif-btn.enabled { border-color: var(--success); color: var(--success); }
+        .notif-btn.denied  { border-color: var(--danger);  color: var(--danger);  }
+        .notif-dot {
+            position: absolute; top: 6px; right: 6px;
+            width: 10px; height: 10px;
+            background: var(--danger); border-radius: 50%;
+            display: none; border: 2px solid white;
+        }
+        .notif-dot.visible { display: block; animation: pulse 1.2s infinite; }
+        @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.4);opacity:.7} }
+
+        /* ===== NEW ORDER ALERT BANNER ===== */
+        .new-order-banner {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 9998;
+            background: linear-gradient(90deg, #06d6a0, #05c793);
+            color: white; padding: 14px 30px;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 15px; box-shadow: 0 4px 20px rgba(6,214,160,0.4);
+            transform: translateY(-100%); transition: transform 0.4s cubic-bezier(.34,1.56,.64,1);
+        }
+        .new-order-banner.show { transform: translateY(0); }
+        .new-order-banner .banner-left { display: flex; align-items: center; gap: 15px; font-weight: 600; font-size: 1rem; }
+        .new-order-banner .banner-left i { font-size: 1.4rem; animation: ring 0.6s ease infinite alternate; }
+        @keyframes ring { from{transform:rotate(-15deg)} to{transform:rotate(15deg)} }
+        .banner-close { background: rgba(255,255,255,0.3); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
+        .banner-close:hover { background: rgba(255,255,255,0.5); }
+        .banner-view-btn { background: white; color: var(--success); border: none; padding: 8px 20px; border-radius: 50px; font-weight: 700; cursor: pointer; font-family: inherit; font-size: 0.9rem; transition: var(--transition); }
+        .banner-view-btn:hover { transform: scale(1.05); }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1200px) {
             .sidebar { width: 80px; padding: 20px 10px; }
@@ -225,6 +266,18 @@
             <input type="password" id="admin-password" placeholder="Enter Password" onkeypress="if(event.key==='Enter') checkLogin()">
             <button onclick="checkLogin()"><i class="fas fa-sign-in-alt"></i> Login</button>
             <p class="login-hint">Default password: <strong>admin123</strong></p>
+        </div>
+    </div>
+
+    <!-- NEW ORDER ALERT BANNER -->
+    <div class="new-order-banner" id="new-order-banner">
+        <div class="banner-left">
+            <i class="fas fa-bell"></i>
+            <span id="banner-text">🎉 New Order Received!</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;">
+            <button class="banner-view-btn" onclick="viewNewOrder()">View Order</button>
+            <button class="banner-close" onclick="closeBanner()"><i class="fas fa-times"></i></button>
         </div>
     </div>
 
@@ -286,6 +339,10 @@
         <div class="header">
             <h1><i class="fas fa-chart-line"></i> Dashboard Overview</h1>
             <div class="header-actions">
+                <button class="notif-btn" id="notif-btn" onclick="toggleNotifications()" title="Enable Order Notifications">
+                    <i class="fas fa-bell" id="notif-icon"></i>
+                    <div class="notif-dot" id="notif-dot"></div>
+                </button>
                 <div class="header-date">
                     <i class="far fa-calendar-alt"></i>
                     <span id="current-date"></span>
@@ -559,12 +616,26 @@
 
             // Fetch Orders
             db.collection("orders").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
-                orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                const newOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                // Detect new orders (not on first load)
+                if (!isFirstLoad) {
+                    newOrders.forEach(order => {
+                        if (!knownOrderIds.has(order.id)) {
+                            fireNewOrderNotification(order);
+                        }
+                    });
+                }
+                // Seed known IDs
+                newOrders.forEach(o => knownOrderIds.add(o.id));
+                isFirstLoad = false;
+                orders = newOrders;
                 renderOrders();
                 updateStats();
             }, (err) => {
                 db.collection("orders").get().then(snapshot => {
                     orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    orders.forEach(o => knownOrderIds.add(o.id));
+                    isFirstLoad = false;
                     renderOrders();
                     updateStats();
                 });
@@ -839,6 +910,125 @@
             clearTimeout(window._toastTimer);
             window._toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
         }
+
+        // ===== NOTIFICATION SYSTEM =====
+        let notificationsEnabled = false;
+        let isFirstLoad = true;
+        let knownOrderIds = new Set();
+        let latestNewOrderId = null;
+        let bannerTimer = null;
+
+        function updateNotifUI() {
+            const btn = document.getElementById('notif-btn');
+            const icon = document.getElementById('notif-icon');
+            const perm = Notification.permission;
+            btn.className = 'notif-btn';
+            if (perm === 'granted') {
+                btn.classList.add('enabled');
+                icon.className = 'fas fa-bell';
+                notificationsEnabled = true;
+            } else if (perm === 'denied') {
+                btn.classList.add('denied');
+                icon.className = 'fas fa-bell-slash';
+                notificationsEnabled = false;
+            } else {
+                icon.className = 'fas fa-bell';
+            }
+        }
+
+        async function toggleNotifications() {
+            if (Notification.permission === 'granted') {
+                notificationsEnabled = !notificationsEnabled;
+                if (!notificationsEnabled) {
+                    document.getElementById('notif-btn').classList.remove('enabled');
+                    showToast('Notifications Off', 'You will no longer get alerts', 'error');
+                } else {
+                    document.getElementById('notif-btn').classList.add('enabled');
+                    showToast('Notifications On', 'You will get alerts for new orders ✅');
+                }
+                return;
+            }
+            if (Notification.permission === 'denied') {
+                showToast('Permission Blocked', 'Enable notifications in browser settings', 'error');
+                return;
+            }
+            const result = await Notification.requestPermission();
+            updateNotifUI();
+            if (result === 'granted') {
+                notificationsEnabled = true;
+                showToast('Notifications Enabled! 🔔', 'You will be alerted for new orders');
+            } else {
+                showToast('Permission Denied', 'Notifications won\'t work without permission', 'error');
+            }
+        }
+
+        function fireNewOrderNotification(order) {
+            latestNewOrderId = order.id;
+            // Show banner
+            const bannerText = document.getElementById('banner-text');
+            const customerName = order.name || 'Customer';
+            const itemCount = (order.items || []).length;
+            bannerText.textContent = `🎉 New Order from ${customerName}! ${itemCount} item${itemCount !== 1 ? 's' : ''} — ₹${order.total || 0}`;
+            const banner = document.getElementById('new-order-banner');
+            banner.classList.add('show');
+            // Show dot
+            document.getElementById('notif-dot').classList.add('visible');
+            // Auto-hide after 8 seconds
+            clearTimeout(bannerTimer);
+            bannerTimer = setTimeout(closeBanner, 8000);
+            // Browser notification
+            if (notificationsEnabled && Notification.permission === 'granted') {
+                try {
+                    new Notification('🍔 New Order — EatLo', {
+                        body: `${customerName} placed an order for ₹${order.total || 0} (${itemCount} item${itemCount !== 1 ? 's' : ''})`,
+                        icon: '/favicon.ico',
+                        badge: '/favicon.ico',
+                        tag: 'new-order-' + order.id,
+                        requireInteraction: true
+                    });
+                } catch(e) { console.warn('Notification error:', e); }
+            }
+            // Play sound
+            playNotifSound();
+        }
+
+        function playNotifSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                [523, 659, 784].forEach((freq, i) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain); gain.connect(ctx.destination);
+                    osc.frequency.value = freq;
+                    osc.type = 'sine';
+                    gain.gain.setValueAtTime(0.3, ctx.currentTime + i * 0.15);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.15 + 0.3);
+                    osc.start(ctx.currentTime + i * 0.15);
+                    osc.stop(ctx.currentTime + i * 0.15 + 0.3);
+                });
+            } catch(e) {}
+        }
+
+        function closeBanner() {
+            document.getElementById('new-order-banner').classList.remove('show');
+            document.getElementById('notif-dot').classList.remove('visible');
+            clearTimeout(bannerTimer);
+        }
+
+        function viewNewOrder() {
+            closeBanner();
+            document.getElementById('orders-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateNotifUI();
+            // Auto-request if never asked
+            if (Notification.permission === 'default') {
+                setTimeout(() => {
+                    showToast('Enable Notifications 🔔', 'Click the bell icon to get new order alerts!');
+                }, 2000);
+            }
+        });
 
         document.addEventListener('DOMContentLoaded', init);
     </script>
