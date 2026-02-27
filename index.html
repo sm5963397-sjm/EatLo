@@ -186,6 +186,63 @@
             font-size: 1.1rem;
         }
 
+        /* ===== Sticky Header ===== */
+        .sticky-header {
+            position: fixed;
+            top: 70px;
+            /* below navbar */
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            padding: 12px 5%;
+            z-index: 999;
+            transform: translateY(-100%);
+            transition: all 0.4s ease;
+        }
+
+        .sticky-header.show {
+            transform: translateY(0);
+        }
+
+        .sticky-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sticky-title {
+            font-weight: 700;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sticky-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .sticky-btn {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cart-sticky {
+            background: var(--gradient-secondary);
+        }
+
         .cart-btn {
             background: var(--gradient-primary) !important;
             color: white !important;
@@ -248,8 +305,15 @@
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-30px) rotate(5deg); }
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-30px) rotate(5deg);
+            }
         }
 
         .hero-content {
@@ -503,7 +567,7 @@
             background: white;
             border-radius: var(--radius-sm);
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             transition: var(--transition);
             border: 1px solid var(--light);
         }
@@ -576,9 +640,9 @@
             filter: grayscale(100%);
             opacity: 0.6;
         }
-        
-        .card.closed-card h3, 
-        .card.closed-card .price, 
+
+        .card.closed-card h3,
+        .card.closed-card .price,
         .card.closed-card .card-category {
             color: var(--gray);
         }
@@ -589,6 +653,7 @@
             cursor: not-allowed;
             box-shadow: none;
         }
+
         .card.closed-card .btn-add:hover {
             transform: none;
         }
@@ -658,36 +723,38 @@
         }
 
         /* ================= RESPONSIVE ================= */
-       @media (max-width: 768px) {
-    .features-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-    .feature-card {
-        min-width: 250px;
-        flex-shrink: 0;
-    }
-}
-            .hero-text h1 {
-                font-size: 3.5rem;
-            }
-
-            .hero-buttons {
-                justify-content: center;
-            }
-
-            .hero-image {
-                display: none;
-            }
-
+        @media (max-width: 768px) {
             .features-grid {
-                grid-template-columns: repeat(2, 1fr);
+                display: flex;
+                overflow-x: auto;
+                gap: 15px;
             }
 
-            .footer-content {
-                grid-template-columns: 1fr 1fr;
+            .feature-card {
+                min-width: 250px;
+                flex-shrink: 0;
             }
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+        }
+
+        .hero-buttons {
+            justify-content: center;
+        }
+
+        .hero-image {
+            display: none;
+        }
+
+        .features-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .footer-content {
+            grid-template-columns: 1fr 1fr;
+        }
         }
 
         @media (max-width: 768px) {
@@ -708,7 +775,9 @@
                 grid-template-columns: 1fr;
             }
 
-            .store-section { padding: 20px 15px; }
+            .store-section {
+                padding: 20px 15px;
+            }
 
             .grid {
                 grid-template-columns: 1fr;
@@ -806,6 +875,26 @@
         </div>
     </nav>
 
+    <!-- Sticky Order Header -->
+    <div class="sticky-header" id="stickyHeader">
+        <div class="sticky-content">
+            <span class="sticky-title">
+                <i class="fas fa-fire"></i> Popular Dishes
+            </span>
+
+            <div class="sticky-actions">
+                <a href="#menu" class="sticky-btn">
+                    <i class="fas fa-utensils"></i> Order Now
+                </a>
+
+                <a href="cart.html" class="sticky-btn cart-sticky">
+                    <i class="fas fa-shopping-bag"></i> Cart
+                    <span class="cart-count" id="cart-count-sticky">0</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
     <section class="hero">
         <div class="hero-content">
             <div class="hero-text">
@@ -832,7 +921,8 @@
     <div class="search-section">
         <div class="search-box">
             <i class="fas fa-search"></i>
-            <input type="text" id="search-input" placeholder="Search for biryani, pizza or store name..." oninput="searchFood()">
+            <input type="text" id="search-input" placeholder="Search for biryani, pizza or store name..."
+                oninput="searchFood()">
             <button onclick="searchFood()">Search</button>
         </div>
     </div>
@@ -969,7 +1059,7 @@
                 // 1. Fetch Stores List (To check if they are open/closed)
                 const storesSnap = await getDocs(collection(db, "stores"));
                 storesList = [];
-                storesSnap.forEach(doc => storesList.push({id: doc.id, ...doc.data()}));
+                storesSnap.forEach(doc => storesList.push({ id: doc.id, ...doc.data() }));
 
                 // 2. Fetch Menu Items
                 const menuSnap = await getDocs(collection(db, "menuItems"));
@@ -1019,17 +1109,17 @@
             const grouped = {};
             itemsToRender.forEach(item => {
                 const sName = item.storeName || 'Other Kitchens';
-                if(!grouped[sName]) grouped[sName] = [];
+                if (!grouped[sName]) grouped[sName] = [];
                 grouped[sName].push(item);
             });
 
             // Build HTML for each Store
-            for(const [storeName, items] of Object.entries(grouped)) {
-                
+            for (const [storeName, items] of Object.entries(grouped)) {
+
                 // Find store details to see if it's open or closed
-                const storeDetails = storesList.find(s => s.name === storeName) || { isOpen: true }; 
+                const storeDetails = storesList.find(s => s.name === storeName) || { isOpen: true };
                 const isOpen = storeDetails.isOpen !== false; // defaults to true
-                
+
                 const badgeClass = isOpen ? 'open' : 'closed';
                 const badgeText = isOpen ? 'OPEN' : 'CLOSED';
 
@@ -1045,7 +1135,7 @@
                 // Add Items for this Store
                 items.forEach((item) => {
                     const imgUrl = item.image || 'https://via.placeholder.com/400x300/ff6b35/ffffff?text=🍔+Yummy';
-                    
+
                     // If store is closed, we add 'closed-card' class and disable the add button
                     const cardClass = isOpen ? '' : 'closed-card';
                     const buttonState = isOpen ? `onclick="addToCart('${item.id}')"` : 'disabled';
@@ -1104,7 +1194,7 @@
         function addToCart(itemId) {
             // Find item by ID instead of index
             const item = menuItems.find(m => m.id === itemId);
-            if(!item) return;
+            if (!item) return;
 
             const existingIndex = cart.findIndex(c => c.name === item.name);
             if (existingIndex !== -1) {
@@ -1164,6 +1254,5 @@
     </script>
 
 </body>
+
 </html>
-
-
