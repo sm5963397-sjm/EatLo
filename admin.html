@@ -343,6 +343,9 @@
                     <i class="fas fa-bell" id="notif-icon"></i>
                     <div class="notif-dot" id="notif-dot"></div>
                 </button>
+                <button class="refresh-btn" onclick="sendTestNtfy()" title="Send test notification to your phone" style="background:linear-gradient(135deg,#118ab2,#0984e3);">
+                    <i class="fas fa-mobile-alt"></i> Test Alert
+                </button>
                 <div class="header-date">
                     <i class="far fa-calendar-alt"></i>
                     <span id="current-date"></span>
@@ -567,6 +570,8 @@
         const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/deqilbbho/image/upload";
         const CLOUDINARY_PRESET = "eatlo.in";
         const ADMIN_PASSWORD = "admin123";
+
+        const NTFY_TOPIC = "eatlo-orders-z7x9k2m4";
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
@@ -909,6 +914,23 @@
             document.getElementById('toast-icon-i').className = type === 'error' ? 'fas fa-times' : 'fas fa-check';
             clearTimeout(window._toastTimer);
             window._toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        async function sendTestNtfy() {
+            try {
+                await fetch("https://ntfy.sh/" + NTFY_TOPIC, {
+                    method: "POST",
+                    body: "🧪 Test from EatLo Admin\nNotifications are working correctly!",
+                    headers: {
+                        "Title": "✅ EatLo Test Notification",
+                        "Priority": "high",
+                        "Tags": "white_check_mark"
+                    }
+                });
+                showToast('Test sent!', 'Check your phone for the ntfy notification', 'success');
+            } catch(e) {
+                showToast('Failed', 'Could not reach ntfy.sh', 'error');
+            }
         }
 
         // ===== NOTIFICATION SYSTEM =====
