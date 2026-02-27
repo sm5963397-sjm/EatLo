@@ -571,7 +571,7 @@
         const CLOUDINARY_PRESET = "eatlo.in";
         const ADMIN_PASSWORD = "admin123";
 
-        const NTFY_TOPIC = "eatlo-orders-z7x9k2m4";
+        const NTFY_TOPIC = "eatlo-neworder-2024";
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
@@ -920,6 +920,7 @@
             try {
                 await fetch("https://ntfy.sh/" + NTFY_TOPIC, {
                     method: "POST",
+                    mode: "no-cors",
                     body: "🧪 Test from EatLo Admin\nNotifications are working correctly!",
                     headers: {
                         "Title": "✅ EatLo Test Notification",
@@ -927,7 +928,7 @@
                         "Tags": "white_check_mark"
                     }
                 });
-                showToast('Test sent!', 'Check your phone for the ntfy notification', 'success');
+                showToast('Test sent! ✅', 'Check your phone now', 'success');
             } catch(e) {
                 showToast('Failed', 'Could not reach ntfy.sh', 'error');
             }
