@@ -592,8 +592,9 @@
 
                 // ===== NTFY.SH MOBILE NOTIFICATION =====
                 const itemsList = cart.map(i => `${i.name} ×${i.quantity || 1}`).join(', ');
-                fetch("https://ntfy.sh/eatlo-orders-z7x9k2m4", {
+                fetch("https://ntfy.sh/eatlo-neworder-2024", {
                     method: "POST",
+                    mode: "no-cors",
                     body: `👤 ${name} | 📱 ${phone}\n🛍️ ${itemsList}\n💰 Total: ₹${total}\n📍 ${address}`,
                     headers: {
                         "Title": "🍔 New Order on EatLo!",
