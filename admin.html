@@ -43,24 +43,7 @@
         ::-webkit-scrollbar-track { background: var(--light); }
         ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
 
-        /* ===== LOGIN MODAL ===== */
-        .login-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, rgba(26,26,46,0.97), rgba(15,15,26,0.99));
-            display: flex; align-items: center; justify-content: center; z-index: 9999;
-        }
-        .login-overlay.hidden { display: none; }
-        .login-box { background: var(--white); padding: 50px; border-radius: var(--radius); box-shadow: var(--shadow); width: 100%; max-width: 420px; text-align: center; animation: slideUp 0.5s ease; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .login-box .logo-icon { width: 80px; height: 80px; background: var(--gradient-primary); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; font-size: 2.5rem; color: white; box-shadow: 0 10px 30px rgba(255,107,53,0.3); }
-        .login-box h2 { margin-bottom: 10px; color: var(--secondary); font-size: 1.8rem; }
-        .login-box > p { color: var(--gray); margin-bottom: 30px; }
-        .login-box input { width: 100%; padding: 16px 20px; border: 2px solid var(--light); border-radius: var(--radius-sm); margin-bottom: 20px; font-size: 1rem; font-family: inherit; transition: var(--transition); }
-        .login-box input:focus { outline: none; border-color: var(--primary); }
-        .login-box button { width: 100%; padding: 16px; background: var(--gradient-primary); color: white; border: none; border-radius: var(--radius-sm); font-size: 1rem; font-family: inherit; font-weight: 600; cursor: pointer; transition: var(--transition); }
-        .login-box button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,107,53,0.3); }
-        .login-hint { margin-top: 25px; font-size: 0.85rem; color: #aaa; }
-        .login-hint strong { color: var(--primary); }
+        /* Login page is now separate (login.html) */
 
         /* ===== SIDEBAR ===== */
         .sidebar { width: var(--sidebar-width); background: var(--gradient-secondary); color: white; position: fixed; height: 100vh; padding: 30px 20px; display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
@@ -258,17 +241,6 @@
 
 <body>
 
-    <div class="login-overlay" id="login-modal">
-        <div class="login-box">
-            <div class="logo-icon"><i class="fas fa-bowl-food"></i></div>
-            <h2>🔐 Admin Login</h2>
-            <p>Enter password to access the dashboard</p>
-            <input type="password" id="admin-password" placeholder="Enter Password" onkeypress="if(event.key==='Enter') checkLogin()">
-            <button onclick="checkLogin()"><i class="fas fa-sign-in-alt"></i> Login</button>
-            <p class="login-hint">Default password: <strong>admin123</strong></p>
-        </div>
-    </div>
-
     <!-- NEW ORDER ALERT BANNER -->
     <div class="new-order-banner" id="new-order-banner">
         <div class="banner-left">
@@ -328,6 +300,9 @@
         <div class="sidebar-footer">
             <button class="danger-btn" onclick="resetAllData()">
                 <i class="fas fa-trash-alt"></i><span>Reset All Data</span>
+            </button>
+            <button class="danger-btn" onclick="logout()" style="color:#ff6b35;">
+                <i class="fas fa-sign-out-alt"></i><span>Logout</span>
             </button>
             <a href="index.html" class="exit-btn">
                 <i class="fas fa-external-link-alt"></i><span>View Website</span>
@@ -556,6 +531,7 @@
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
     <script>
         const firebaseConfig = {
@@ -577,23 +553,27 @@
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // PROTECT PAGE: redirect to login if not signed in
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                window.location.replace('login.html');
+            } else {
+                init();
+            }
+        });
 
         let stores = [];
         let menu = [];
         let orders = [];
         let selectedFile = null;
 
-        // AUTH
-        function checkLogin() {
-            if (document.getElementById('admin-password').value === ADMIN_PASSWORD) {
-                document.getElementById('login-modal').classList.add('hidden');
-                sessionStorage.setItem('adminLoggedIn', 'true');
-            } else {
-                showToast('Login Failed', 'Wrong password', 'error');
-            }
-        }
-        if (sessionStorage.getItem('adminLoggedIn') === 'true') {
-            document.getElementById('login-modal').classList.add('hidden');
+        // Logout
+        function logout() {
+            auth.signOut().then(() => {
+                window.location.replace('login.html');
+            });
         }
 
         // INIT
@@ -1059,7 +1039,7 @@
             }
         });
 
-        document.addEventListener('DOMContentLoaded', init);
+        // init() is called by auth.onAuthStateChanged above
     </script>
 </body>
 </html>
