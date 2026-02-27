@@ -589,6 +589,20 @@
                 const docRef = await db.collection("orders").add(newOrder);
                 localStorage.removeItem('cart');
                 localStorage.setItem('customerPhone', phone);
+
+                // ===== NTFY.SH MOBILE NOTIFICATION =====
+                const itemsList = cart.map(i => `${i.name} ×${i.quantity || 1}`).join(', ');
+                fetch("https://ntfy.sh/eatlo-orders-z7x9k2m4", {
+                    method: "POST",
+                    body: `👤 ${name} | 📱 ${phone}\n🛍️ ${itemsList}\n💰 Total: ₹${total}\n📍 ${address}`,
+                    headers: {
+                        "Title": "🍔 New Order on EatLo!",
+                        "Priority": "urgent",
+                        "Tags": "bell,takeout_box"
+                    }
+                }).catch(() => {}); // silent fail — don't block order
+                // ========================================
+
                 showToast('Order placed! Redirecting... 🥳');
                 setTimeout(() => { window.location.href = 'order-success.html?id=' + docRef.id; }, 1500);
             } catch (error) {
