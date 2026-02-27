@@ -571,7 +571,8 @@
         const CLOUDINARY_PRESET = "eatlo.in";
         const ADMIN_PASSWORD = "admin123";
 
-        const NTFY_TOPIC = "eatlo-neworder-2024";
+        const TELEGRAM_TOKEN = "8490371740:AAEkQ3T7D563qbsjf47UG3ZgJmlmvmC4wPU";
+        const TELEGRAM_CHAT_ID = "8170295182";
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
@@ -918,19 +919,23 @@
 
         async function sendTestNtfy() {
             try {
-                await fetch("https://ntfy.sh/" + NTFY_TOPIC, {
+                const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
                     method: "POST",
-                    mode: "no-cors",
-                    body: "🧪 Test from EatLo Admin\nNotifications are working correctly!",
-                    headers: {
-                        "Title": "✅ EatLo Test Notification",
-                        "Priority": "high",
-                        "Tags": "white_check_mark"
-                    }
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: "✅ *EatLo Test Alert!*\n\nTelegram notifications are working correctly! You'll get a message like this every time a new order comes in 🍔",
+                        parse_mode: "Markdown"
+                    })
                 });
-                showToast('Test sent! ✅', 'Check your phone now', 'success');
+                const data = await res.json();
+                if (data.ok) {
+                    showToast('Test sent! ✅', 'Check your Telegram now', 'success');
+                } else {
+                    showToast('Failed', data.description || 'Telegram error', 'error');
+                }
             } catch(e) {
-                showToast('Failed', 'Could not reach ntfy.sh', 'error');
+                showToast('Failed', 'Could not reach Telegram', 'error');
             }
         }
 
