@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Your Cart - EatLo</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -21,25 +20,16 @@
             --gray: #6c757d;
             --gradient-primary: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
             --gradient-secondary: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            --shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
-            --shadow-sm: 0 5px 20px rgba(0, 0, 0, 0.07);
-            --shadow-primary: 0 10px 40px rgba(255, 107, 53, 0.3);
+            --shadow: 0 20px 60px rgba(0,0,0,0.12);
+            --shadow-sm: 0 5px 20px rgba(0,0,0,0.07);
+            --shadow-primary: 0 10px 40px rgba(255,107,53,0.3);
             --radius: 20px;
             --radius-sm: 12px;
             --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html,
-        body {
-            overflow-x: hidden;
-            width: 100%;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { overflow-x: hidden; width: 100%; }
 
         body {
             font-family: 'Poppins', sans-serif;
@@ -48,358 +38,281 @@
         }
 
         nav {
-            background: rgba(255, 255, 255, 0.96);
+            background: rgba(255,255,255,0.96);
             backdrop-filter: blur(20px);
             padding: 15px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            position: sticky; top: 0; z-index: 1000;
             box-shadow: var(--shadow-sm);
         }
 
         .logo {
-            font-weight: 900;
-            font-size: 1.5rem;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            font-weight: 900; font-size: 1.8rem; text-decoration: none;
+            display: flex; align-items: center; gap: 10px;
         }
 
         .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--gradient-primary);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            box-shadow: var(--shadow-primary);
+            width: 45px; height: 45px;
+            background: var(--gradient-primary); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1.3rem; box-shadow: var(--shadow-primary);
         }
 
         .logo-text {
             background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
 
         .back-btn {
-            background: var(--light);
-            color: var(--secondary);
-            padding: 10px 18px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: var(--transition);
+            background: var(--light); color: var(--secondary);
+            padding: 12px 25px; border-radius: 50px; text-decoration: none;
+            font-weight: 500; transition: var(--transition);
+            display: flex; align-items: center; gap: 10px;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 30px 15px;
-        }
+        .back-btn:hover { background: var(--gradient-primary); color: white; transform: translateY(-2px); }
 
-        .page-header {
-            text-align: center;
-            margin-bottom: 35px;
-        }
+        .container { max-width: 1300px; margin: 0 auto; padding: 40px 20px; }
+
+        .page-header { text-align: center; margin-bottom: 50px; }
 
         .page-header h1 {
-            font-size: 2.2rem;
-            color: var(--secondary);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
+            font-size: 2.8rem; color: var(--secondary); margin-bottom: 10px;
+            display: flex; align-items: center; justify-content: center; gap: 15px;
         }
 
-        .page-header h1 i {
-            color: var(--primary);
-        }
+        .page-header h1 i { color: var(--primary); }
+        .page-header p { color: var(--gray); font-size: 1.1rem; }
 
-        .page-header p {
-            color: var(--gray);
-            font-size: 1rem;
-        }
+        .cart-layout { display: grid; grid-template-columns: 1fr 420px; gap: 40px; }
 
-        .cart-layout {
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 30px;
-            align-items: start;
-        }
-
-        .cart-section,
-        .order-summary {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: 25px;
-            box-shadow: var(--shadow-sm);
+        .cart-section {
+            background: var(--white); border-radius: var(--radius);
+            padding: 35px; box-shadow: var(--shadow-sm);
         }
 
         .section-title {
-            font-size: 1.2rem;
-            color: var(--secondary);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--light);
+            font-size: 1.3rem; color: var(--secondary); margin-bottom: 25px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding-bottom: 20px; border-bottom: 2px solid var(--light);
         }
 
-        .item-count {
-            background: var(--light);
-            padding: 6px 15px;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            color: var(--gray);
-        }
+        .section-title span { display: flex; align-items: center; gap: 12px; }
+        .section-title i { color: var(--primary); }
+        .item-count { background: var(--light); padding: 8px 20px; border-radius: 50px; font-size: 0.9rem; color: var(--gray); }
 
         .cart-item {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding: 20px 0;
-            border-bottom: 1px solid var(--light);
+            display: flex; align-items: center; gap: 25px;
+            padding: 25px 0; border-bottom: 1px solid var(--light);
+            animation: slideIn 0.4s ease;
         }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .cart-item:last-child { border-bottom: none; }
 
         .item-image {
-            width: 80px;
-            height: 80px;
-            border-radius: 15px;
-            background-size: cover;
-            background-position: center;
-            flex-shrink: 0;
+            width: 100px; height: 100px; border-radius: 15px;
+            background-size: cover; background-position: center;
+            background-color: var(--light); flex-shrink: 0; box-shadow: var(--shadow-sm);
         }
 
-        .item-details {
-            flex: 1;
-        }
+        .item-details { flex: 1; min-width: 0; }
+        .item-details h4 { color: var(--secondary); margin-bottom: 5px; font-size: 1.1rem; }
+        .item-details .item-desc { color: var(--gray); font-size: 0.85rem; margin-bottom: 8px; }
+        .item-details .item-price { color: var(--primary); font-weight: 700; font-size: 1.2rem; }
 
-        .item-details h4 {
-            font-size: 1rem;
-            color: var(--secondary);
-        }
-
-        .item-details .item-price {
-            color: var(--primary);
-            font-weight: 700;
-            display: block;
-            margin-top: 4px;
-        }
-
-        .item-actions {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 10px;
-        }
+        .item-actions { display: flex; align-items: center; gap: 15px; }
 
         .qty-control {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--light);
-            padding: 6px 12px;
-            border-radius: 50px;
+            display: flex; align-items: center; gap: 12px;
+            background: var(--light); padding: 10px 18px; border-radius: 50px;
         }
 
         .qty-btn {
-            width: 28px;
-            height: 28px;
-            border: none;
-            background: var(--white);
-            border-radius: 50%;
-            cursor: pointer;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--shadow-sm);
+            width: 32px; height: 32px; border: none; background: var(--white);
+            border-radius: 50%; cursor: pointer; font-weight: 700; font-size: 1rem;
+            transition: var(--transition);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--secondary); box-shadow: var(--shadow-sm);
         }
 
+        .qty-btn:hover { background: var(--gradient-primary); color: white; transform: scale(1.1); }
+        .qty-num { font-weight: 700; min-width: 25px; text-align: center; font-size: 1.1rem; }
+
         .remove-btn {
-            border: none;
-            background: #fee2e2;
-            color: var(--danger);
-            width: 35px;
-            height: 35px;
-            border-radius: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 45px; height: 45px; border: none; background: #fee2e2;
+            color: var(--danger); border-radius: 12px; cursor: pointer;
+            transition: var(--transition);
+            display: flex; align-items: center; justify-content: center; font-size: 1rem;
+        }
+
+        .remove-btn:hover { background: var(--danger); color: white; transform: scale(1.1); }
+
+        .empty-cart { text-align: center; padding: 80px 20px; }
+        .empty-cart-icon { width: 150px; height: 150px; margin: 0 auto 30px; background: var(--light); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .empty-cart-icon i { font-size: 4rem; color: #ddd; }
+        .empty-cart h3 { font-size: 1.5rem; color: var(--secondary); margin-bottom: 10px; }
+        .empty-cart p { color: var(--gray); margin-bottom: 30px; }
+        .empty-cart a {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: var(--gradient-primary); color: white;
+            padding: 15px 35px; border-radius: 50px; text-decoration: none;
+            font-weight: 600; transition: var(--transition); box-shadow: var(--shadow-primary);
+        }
+        .empty-cart a:hover { transform: translateY(-3px); }
+
+        .order-summary {
+            background: var(--white); border-radius: var(--radius);
+            padding: 35px; box-shadow: var(--shadow-sm);
+            position: sticky; top: 100px;
+        }
+
+        .promo-box { display: flex; gap: 10px; margin-bottom: 10px; }
+
+        .promo-box input {
+            flex: 1; padding: 14px 18px; border: 2px solid var(--light);
+            border-radius: var(--radius-sm); font-family: inherit; font-size: 0.95rem; transition: var(--transition);
+        }
+
+        .promo-box input:focus { outline: none; border-color: var(--primary); }
+
+        .promo-box button {
+            padding: 14px 22px; background: var(--gradient-secondary);
+            color: white; border: none; border-radius: var(--radius-sm);
+            cursor: pointer; font-family: inherit; font-weight: 600; transition: var(--transition);
+        }
+
+        .promo-box button:hover { transform: scale(1.05); }
+
+        .promo-applied {
+            font-size: 0.82rem; color: var(--success);
+            display: flex; align-items: center; gap: 6px; margin-bottom: 18px;
         }
 
         .summary-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            color: var(--gray);
-            font-size: 0.95rem;
+            display: flex; justify-content: space-between;
+            padding: 13px 0; color: var(--gray); font-size: 0.95rem;
+            border-bottom: 1px solid #f5f5f5;
         }
+
+        .summary-row:last-of-type { border-bottom: none; }
+        .summary-row.discount { color: var(--success); }
 
         .summary-row.total {
-            border-top: 2px dashed var(--light);
-            margin-top: 15px;
-            padding-top: 15px;
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--secondary);
+            border-top: 2px dashed var(--light); margin-top: 10px; padding-top: 20px;
+            font-size: 1.4rem; font-weight: 700; color: var(--secondary); border-bottom: none;
         }
 
-        .summary-row.total span:last-child {
-            color: var(--primary);
-        }
+        .summary-row.total span:last-child { color: var(--primary); }
 
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
+        .divider { height: 1px; background: var(--light); margin: 25px 0; }
+
+        .form-section-title {
+            font-weight: 700; color: var(--secondary); margin-bottom: 18px;
+            display: flex; align-items: center; gap: 10px; font-size: 1rem;
         }
+        .form-section-title i { color: var(--primary); }
+
+        .form-group { margin-bottom: 18px; }
 
         .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: var(--secondary);
+            display: block; margin-bottom: 7px;
+            font-weight: 500; color: var(--secondary); font-size: 0.88rem;
         }
 
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid var(--light);
-            border-radius: var(--radius-sm);
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.9rem;
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 14px 18px; border: 2px solid var(--light);
+            border-radius: var(--radius-sm); font-family: inherit; font-size: 0.95rem;
+            transition: var(--transition); background: #fafafa; color: var(--secondary);
         }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(255,107,53,0.1); background: white;
+        }
+
+        .form-group textarea { resize: none; height: 90px; }
 
         .location-btn {
-            width: 100%;
-            background: #06d6a0;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-weight: 600;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            width: 100%; background: linear-gradient(135deg, var(--success), #05c793);
+            color: white; border: none; padding: 14px; border-radius: var(--radius-sm);
+            cursor: pointer; font-family: inherit; font-weight: 600; margin-bottom: 18px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: var(--transition); font-size: 0.9rem;
         }
 
+        .location-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(6,214,160,0.3); }
+
         .checkout-btn {
-            width: 100%;
-            background: var(--gradient-primary);
-            color: white;
-            border: none;
-            padding: 18px;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-size: 1.1rem;
-            font-weight: 700;
+            width: 100%; background: var(--gradient-primary); color: white; border: none;
+            padding: 20px; border-radius: var(--radius-sm); cursor: pointer;
+            font-family: inherit; font-size: 1.1rem; font-weight: 700; transition: var(--transition);
+            display: flex; align-items: center; justify-content: center; gap: 12px;
             box-shadow: var(--shadow-primary);
         }
 
+        .checkout-btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(255,107,53,0.4); }
+        .checkout-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+
         .clear-btn {
-            width: 100%;
-            background: transparent;
-            color: var(--danger);
-            border: 2px solid var(--danger);
-            padding: 10px;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            margin-top: 10px;
-            font-weight: 600;
+            width: 100%; background: none; color: var(--danger);
+            border: 2px solid var(--danger); padding: 13px;
+            border-radius: var(--radius-sm); cursor: pointer; font-family: inherit;
+            font-weight: 600; margin-top: 12px; transition: var(--transition);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
         }
 
-        /* MOBILE CENTERING FIX */
-        @media (max-width: 992px) {
-            .cart-layout {
-                grid-template-columns: 1fr;
-                /* Stacks vertically */
-                max-width: 600px;
-                /* Limits width to keep it centered */
-                margin: 0 auto;
-                /* Centers the whole block */
-            }
+        .clear-btn:hover { background: var(--danger); color: white; }
 
-            .page-header h1 {
-                font-size: 1.8rem;
-            }
-
-            .order-summary {
-                position: static;
-            }
+        .trust-badges {
+            display: flex; justify-content: center; gap: 20px;
+            margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--light);
         }
 
-        @media (max-width: 480px) {
-            .container {
-                padding: 15px 10px;
-            }
-
-            .cart-item {
-                gap: 12px;
-            }
-
-            .item-image {
-                width: 65px;
-                height: 65px;
-            }
-
-            .item-details h4 {
-                font-size: 0.9rem;
-            }
-
-            .qty-control {
-                padding: 4px 8px;
-            }
-
-            .qty-btn {
-                width: 24px;
-                height: 24px;
-            }
-        }
+        .trust-badge { display: flex; flex-direction: column; align-items: center; gap: 5px; color: var(--gray); font-size: 0.75rem; }
+        .trust-badge i { font-size: 1.4rem; color: var(--success); }
 
         .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            left: 20px;
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            z-index: 9999;
-            transform: translateY(-100px);
-            transition: 0.4s;
-            text-align: center;
-            border-left: 5px solid var(--success);
+            position: fixed; top: 100px; right: 20px;
+            background: var(--white); color: var(--secondary);
+            padding: 18px 28px; border-radius: var(--radius-sm); box-shadow: var(--shadow);
+            z-index: 10000; transform: translateX(400px); transition: var(--transition);
+            display: flex; align-items: center; gap: 12px; border-left: 4px solid var(--success);
+        }
+        .toast.show { transform: translateX(0); }
+        .toast.error { border-left-color: var(--danger); }
+        .toast i { font-size: 1.3rem; color: var(--success); }
+        .toast.error i { color: var(--danger); }
+
+        @media (max-width: 1024px) {
+            .cart-layout { grid-template-columns: 1fr; }
+            .order-summary { position: static; }
         }
 
-        .toast.show {
-            transform: translateY(0);
+        @media (max-width: 600px) {
+            .page-header h1 { font-size: 2rem; }
+            .container { padding: 20px 15px; }
+            .cart-section, .order-summary { padding: 20px; border-radius: 15px; }
+            .cart-item { gap: 12px; }
+            .item-image { width: 70px; height: 70px; }
+            .item-details h4 { font-size: 0.95rem; }
+            .item-details .item-desc { display: none; }
+            .summary-row.total { font-size: 1.1rem; }
         }
     </style>
 </head>
 
 <body>
+
     <div class="toast" id="toast">
-        <span id="toast-message"></span>
+        <i class="fas fa-check-circle" id="toast-icon"></i>
+        <span id="toast-message">Success!</span>
     </div>
 
     <nav>
@@ -407,56 +320,86 @@
             <div class="logo-icon"><i class="fas fa-bowl-food"></i></div>
             <span class="logo-text">EatLo</span>
         </a>
-        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Menu</a>
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Continue Shopping</a>
     </nav>
 
     <div class="container">
         <div class="page-header">
             <h1><i class="fas fa-shopping-bag"></i> Your Cart</h1>
-            <p>Ready for a delicious meal?</p>
+            <p>Review your items and place your order</p>
         </div>
 
         <div class="cart-layout">
             <div class="cart-section">
                 <div class="section-title">
-                    <span>Items</span>
+                    <span><i class="fas fa-utensils"></i> Order Items</span>
                     <span class="item-count" id="item-count">0 items</span>
                 </div>
                 <div id="cart-items"></div>
             </div>
 
             <div class="order-summary">
-                <div class="section-title">Order Summary</div>
+                <div class="section-title">
+                    <span><i class="fas fa-receipt"></i> Order Summary</span>
+                </div>
+
+                <!-- <div class="promo-box">
+                    <input type="text" id="promo-code" placeholder="Promo code (e.g. EATLO50)">
+                    <button onclick="applyPromo()">Apply</button>
+                </div>
+                <div class="promo-applied" id="promo-status" style="display:none;">
+                    <i class="fas fa-tag"></i> <span id="promo-msg"></span>
+                </div> -->
+
                 <div class="summary-row"><span>Subtotal</span><span id="subtotal">₹0</span></div>
                 <div class="summary-row"><span>Delivery Fee</span><span id="delivery-fee">₹40</span></div>
-
+                <div class="summary-row"><span>Taxes (5%)</span><span id="taxes">₹0</span></div>
+                <div class="summary-row discount" id="discount-row" style="display:none;">
+                    <span><i class="fas fa-tag"></i> Discount</span>
+                    <span id="discount">-₹0</span>
+                </div>
                 <div class="summary-row total">
                     <span>Total</span>
                     <span id="total-price">₹0</span>
                 </div>
 
-                <div style="margin: 20px 0; height: 1px; background: #eee;"></div>
+                <div class="divider"></div>
+
+                <p class="form-section-title"><i class="fas fa-truck"></i> Delivery Details</p>
 
                 <div class="form-group">
-                    <label>Your Name</label>
-                    <input type="text" id="name" placeholder="Full Name">
+                    <label>Full Name *</label>
+                    <input type="text" id="name" placeholder="Enter your full name">
                 </div>
+
                 <div class="form-group">
-                    <label>Phone Number</label>
-                    <input type="tel" id="phone" placeholder="10 Digit Number" maxlength="10">
+                    <label>Phone Number *</label>
+                    <input type="tel" id="phone" placeholder="10-digit mobile number" maxlength="10"
+                        oninput="this.value=this.value.replace(/[^0-9]/g,'')">
                 </div>
+
                 <button class="location-btn" onclick="getLocation()">
-                    <i class="fas fa-location-arrow"></i> Use Location
+                    <i class="fas fa-location-crosshairs"></i> Use My Current Location
                 </button>
+
                 <div class="form-group">
-                    <label>Delivery Address</label>
-                    <textarea id="address" placeholder="House No, Street, Landmark..."></textarea>
+                    <label>Delivery Address *</label>
+                    <textarea id="address" placeholder="Enter complete address with landmark"></textarea>
                 </div>
 
                 <button class="checkout-btn" id="checkout-btn" onclick="placeOrder()">
-                    Place Order Securely
+                    <i class="fas fa-lock"></i> Place Order Securely
                 </button>
-                <button class="clear-btn" onclick="clearCart()">Clear Cart</button>
+
+                <button class="clear-btn" onclick="clearCart()">
+                    <i class="fas fa-trash"></i> Clear Cart
+                </button>
+
+                <div class="trust-badges">
+                    <div class="trust-badge"><i class="fas fa-shield-alt"></i><span>Secure</span></div>
+                    <div class="trust-badge"><i class="fas fa-truck"></i><span>Fast Delivery</span></div>
+                    <div class="trust-badge"><i class="fas fa-undo"></i><span>Easy Refund</span></div>
+                </div>
             </div>
         </div>
     </div>
@@ -465,7 +408,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <script>
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyA9ow668puMztfqJcfAHkJcXXBlWjWFIx8",
             authDomain: "eatlo-ec2f6.firebaseapp.com",
@@ -474,18 +416,28 @@
             messagingSenderId: "298601218259",
             appId: "1:298601218259:web:d8b54f5322139f42881426"
         };
+
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         const deliveryFee = 40;
+        let discountAmount = 0;
+        let promoApplied = false;
 
         function renderCart() {
             const container = document.getElementById('cart-items');
             container.innerHTML = '';
 
             if (cart.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding: 40px 0;"><i class="fas fa-shopping-basket" style="font-size: 3rem; color: #eee; margin-bottom: 15px;"></i><p>Your cart is empty</p></div>';
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <div class="empty-cart-icon"><i class="fas fa-shopping-basket"></i></div>
+                        <h3>Your cart is empty</h3>
+                        <p>Looks like you haven't added any items yet!</p>
+                        <a href="index.html"><i class="fas fa-utensils"></i> Browse Menu</a>
+                    </div>
+                `;
                 document.getElementById('checkout-btn').disabled = true;
             } else {
                 document.getElementById('checkout-btn').disabled = false;
@@ -496,15 +448,18 @@
                             <div class="item-image" style="background-image: url('${item.image || ''}')"></div>
                             <div class="item-details">
                                 <h4>${item.name}</h4>
+                                <p class="item-desc">${item.description || 'Delicious & Fresh'}</p>
                                 <span class="item-price">₹${item.price * qty}</span>
                             </div>
                             <div class="item-actions">
                                 <div class="qty-control">
                                     <button class="qty-btn" onclick="updateQty(${index}, -1)">−</button>
-                                    <span style="font-weight:700;">${qty}</span>
+                                    <span class="qty-num">${qty}</span>
                                     <button class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
                                 </div>
-                                <button class="remove-btn" onclick="removeItem(${index})"><i class="fas fa-trash-can"></i></button>
+                                <button class="remove-btn" onclick="removeItem(${index})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             </div>
                         </div>
                     `;
@@ -513,89 +468,205 @@
             updateTotals();
         }
 
-        window.updateQty = (index, change) => {
+        window.updateQty = function(index, change) {
             cart[index].quantity = (cart[index].quantity || 1) + change;
             if (cart[index].quantity <= 0) cart.splice(index, 1);
-            saveAndRender();
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
         };
 
-        window.removeItem = (index) => {
+        window.removeItem = function(index) {
+            const name = cart[index].name;
             cart.splice(index, 1);
-            saveAndRender();
-            showToast('Item removed');
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
+            showToast(name + ' removed from cart');
         };
 
-        window.clearCart = () => {
-            if (confirm('Clear entire cart?')) {
-                cart = [];
-                saveAndRender();
+        window.clearCart = function() {
+            if (cart.length === 0) return;
+            if (confirm('Remove all items from cart?')) {
+                cart = []; discountAmount = 0; promoApplied = false;
+                localStorage.removeItem('cart');
+                renderCart();
+                showToast('Cart cleared');
             }
         };
 
-        function saveAndRender() {
-            localStorage.setItem('cart', JSON.stringify(cart));
-            renderCart();
-        }
-
         function updateTotals() {
             let subtotal = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
+            const taxes = cart.length > 0 ? Math.round(subtotal * 0.05) : 0;
             const fee = cart.length > 0 ? deliveryFee : 0;
-            const total = subtotal + fee;
+            const total = Math.max(0, subtotal + taxes + fee - discountAmount);
+            const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
-            document.getElementById('item-count').innerText = cart.length + ' items';
+            document.getElementById('item-count').innerText = totalItems + (totalItems === 1 ? ' item' : ' items');
             document.getElementById('subtotal').innerText = '₹' + subtotal;
+            document.getElementById('delivery-fee').innerText = '₹' + fee;
+            document.getElementById('taxes').innerText = '₹' + taxes;
             document.getElementById('total-price').innerText = '₹' + total;
+
+            if (discountAmount > 0) {
+                document.getElementById('discount-row').style.display = 'flex';
+                document.getElementById('discount').innerText = '-₹' + discountAmount;
+            } else {
+                document.getElementById('discount-row').style.display = 'none';
+            }
         }
 
-        window.getLocation = () => {
-            if (!navigator.geolocation) return showToast('Not supported');
-            navigator.geolocation.getCurrentPosition(pos => {
-                document.getElementById('address').value = `GPS: ${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`;
-                showToast('Location Fixed! 📍');
-            });
+        window.applyPromo = function() {
+            if (promoApplied) { showToast('Promo already applied!', 'error'); return; }
+            if (cart.length === 0) { showToast('Add items first!', 'error'); return; }
+
+            const code = document.getElementById('promo-code').value.trim().toUpperCase();
+            let subtotal = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
+            const statusEl = document.getElementById('promo-status');
+            const msgEl = document.getElementById('promo-msg');
+
+            if (code === 'EATLO50') {
+                discountAmount = Math.round(subtotal * 0.5);
+                promoApplied = true;
+                statusEl.style.display = 'flex';
+                msgEl.innerText = '50% OFF applied! You save ₹' + discountAmount;
+                updateTotals();
+                showToast('Promo applied! 50% OFF 🎉');
+            } else if (code === 'EATLO100') {
+                discountAmount = Math.min(100, subtotal);
+                promoApplied = true;
+                statusEl.style.display = 'flex';
+                msgEl.innerText = '₹100 OFF applied!';
+                updateTotals();
+                showToast('Promo applied! ₹100 OFF 🎉');
+            } else if (code === '') {
+                showToast('Please enter a promo code', 'error');
+            } else {
+                showToast('Invalid promo code', 'error');
+            }
         };
 
-        window.placeOrder = async () => {
+        // Store GPS coords globally so we can send them with the order
+        let customerLat = null;
+        let customerLng = null;
+
+        window.getLocation = function() {
+            if (!navigator.geolocation) { showToast('Geolocation not supported', 'error'); return; }
+            const btn = document.querySelector('.location-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Getting location...';
+            btn.disabled = true;
+            navigator.geolocation.getCurrentPosition(
+                pos => {
+                    customerLat = pos.coords.latitude.toFixed(6);
+                    customerLng = pos.coords.longitude.toFixed(6);
+                    document.getElementById('address').value = 'GPS Location captured ✅\n\nAdd landmark (optional): ';
+                    btn.innerHTML = '<i class="fas fa-check-circle"></i> Location Captured! (' + customerLat + ', ' + customerLng + ')';
+                    btn.style.background = 'linear-gradient(135deg, #06d6a0, #05c793)';
+                    showToast('Location captured! 📍 Will be sent with order.');
+                },
+                () => {
+                    btn.innerHTML = '<i class="fas fa-location-crosshairs"></i> Use My Current Location';
+                    btn.disabled = false;
+                    btn.style.background = '';
+                    showToast('Could not get location. Enter manually.', 'error');
+                },
+                { timeout: 10000 }
+            );
+        };
+
+        window.placeOrder = async function() {
             const name = document.getElementById('name').value.trim();
             const phone = document.getElementById('phone').value.trim();
             const address = document.getElementById('address').value.trim();
 
-            if (!name || phone.length < 10 || !address) return showToast('Please fill all details', 'error');
+            if (cart.length === 0) { showToast('Your cart is empty', 'error'); return; }
+            if (!name) { showToast('Please enter your name', 'error'); return; }
+            if (!phone || phone.length !== 10) { showToast('Enter a valid 10-digit phone number', 'error'); return; }
+            if (!address) { showToast('Please enter your delivery address', 'error'); return; }
 
             const btn = document.getElementById('checkout-btn');
             btn.disabled = true;
-            btn.innerText = 'Processing...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
 
             let subtotal = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
+            const taxes = Math.round(subtotal * 0.05);
+            const total = Math.max(0, subtotal + taxes + deliveryFee - discountAmount);
 
-            const order = {
+            const newOrder = {
                 name, phone, address, items: cart,
-                subtotal, total: subtotal + deliveryFee,
+                subtotal, taxes, deliveryFee, discountAmount, total,
                 status: 'Confirmed',
-                date: new Date().toLocaleString()
+                date: new Date().toLocaleString('en-IN'),
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
             };
 
             try {
-                const doc = await db.collection("orders").add(order);
+                const docRef = await db.collection("orders").add(newOrder);
                 localStorage.removeItem('cart');
-                showToast('Order Success! 🎉');
-                setTimeout(() => window.location.href = 'order-success.html?id=' + doc.id, 1500);
-            } catch (e) {
-                showToast('Error placing order', 'error');
+                localStorage.setItem('customerPhone', phone);
+
+                // ===== TELEGRAM NOTIFICATIONS (All Recipients) =====
+                const TELEGRAM_TOKEN = "8490371740:AAEkQ3T7D563qbsjf47UG3ZgJmlmvmC4wPU";
+                // Add as many Chat IDs as you want here:
+                const RECIPIENTS = [
+                    "8170295182",   // Developer (you)
+                     "5176824325",     // Owner - replace with actual ID
+                     "8380826774",    // Partner - replace with actual ID
+                     "8286451273",    // Partner - replace with actual ID
+                    // "PARTNER_CHAT_ID_HERE",    // Partner - replace with actual ID
+                ];
+
+                const itemsList = cart.map(i => `• ${i.name} ×${i.quantity || 1}`).join('\n');
+
+                // Build Google Maps link if location was captured
+                let locationLine = '';
+                if (customerLat && customerLng) {
+                    const mapsLink = `https://www.google.com/maps?q=${customerLat},${customerLng}`;
+                    locationLine = `\n📍 *Live Location:* [Open in Google Maps](${mapsLink})`;
+                }
+
+                const msg = `🍔 *NEW ORDER! #${docRef.id.slice(0,6).toUpperCase()}*\n\n` +
+                    `👤 *Name:* ${name}\n` +
+                    `📱 *Phone:* ${phone}\n` +
+                    `🏠 *Address:* ${address}` +
+                    locationLine + `\n\n` +
+                    `🛍️ *Items:*\n${itemsList}\n\n` +
+                    `💰 *Total: ₹${total}*\n` +
+                    `⏰ ${new Date().toLocaleString('en-IN')}\n\n` +
+                    `🔗 [View in Admin](https://eatlo.food/admin.html)`;
+
+                // Send to all recipients simultaneously
+                RECIPIENTS.forEach(chatId => {
+                    fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ chat_id: chatId, text: msg, parse_mode: "Markdown" })
+                    }).catch(() => {});
+                });
+                // ===================================================
+
+                showToast('Order placed! Redirecting... 🥳');
+                setTimeout(() => { window.location.href = 'order-success.html?id=' + docRef.id; }, 1500);
+            } catch (error) {
+                console.error(error);
+                showToast('Order failed. Please try again.', 'error');
                 btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-lock"></i> Place Order Securely';
             }
         };
 
-        function showToast(msg, type = 'success') {
-            const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.style.borderLeftColor = type === 'error' ? '#ef476f' : '#06d6a0';
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
+        function showToast(message, type) {
+            type = type || 'success';
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            document.getElementById('toast-message').innerText = message;
+            toast.className = 'toast ' + type;
+            icon.className = type === 'error' ? 'fas fa-times-circle' : 'fas fa-check-circle';
+            toast.classList.add('show');
+            clearTimeout(window._toastTimer);
+            window._toastTimer = setTimeout(function() { toast.classList.remove('show'); }, 3000);
         }
 
         renderCart();
     </script>
 </body>
-
 </html>
+
