@@ -110,14 +110,9 @@
         }
 
         .container {
-            max-width: 900px;
-            /* Slightly narrower for a tighter, centered look */
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 20px 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            /* Centers the header and layout */
+            padding: 20px 10px;
         }
 
         .page-header {
@@ -146,11 +141,8 @@
 
         .cart-layout {
             display: grid;
-            grid-template-columns: 1fr 380px;
-            /* Adjusting the sidebar width */
-            gap: 30px;
-            width: 100%;
-            /* Ensures it uses the container width */
+            grid-template-columns: 1fr 420px;
+            gap: 40px;
         }
 
         .cart-section {
@@ -192,11 +184,10 @@
         .cart-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-            /* Horizontal centering of item content */
-            gap: 20px;
-            padding: 20px 0;
+            gap: 25px;
+            padding: 25px 0;
             border-bottom: 1px solid var(--light);
+            animation: slideIn 0.4s ease;
         }
 
         @keyframes slideIn {
@@ -252,21 +243,16 @@
         .item-actions {
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 15px;
         }
 
         .qty-control {
             display: flex;
             align-items: center;
-            justify-content: center;
-            /* Ensures the number is dead center */
             gap: 12px;
-            background: #fdfdfd;
-            /* Lighter background like your photo */
-            padding: 8px 15px;
+            background: var(--light);
+            padding: 10px 18px;
             border-radius: 50px;
-            border: 1px solid #eee;
         }
 
         .qty-btn {
@@ -710,26 +696,6 @@
             nav {
                 padding-left: 15px;
                 padding-right: 15px;
-            }
-        }
-
-        /* 3rd point: Mobile Responsive Centering */
-        @media (max-width: 768px) {
-            .container {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .cart-layout {
-                grid-template-columns: 1fr;
-                width: 100%;
-                max-items: 450px;
-                margin: 0 auto;
-            }
-
-            .cart-item {
-                justify-content: center;
             }
         }
     </style>
