@@ -189,10 +189,12 @@
         .cart-item {
             display: flex;
             align-items: center;
-            gap: 25px;
-            padding: 25px 0;
+            gap: 15px;
+            padding: 20px 0;
             border-bottom: 1px solid var(--light);
             animation: slideIn 0.4s ease;
+            flex-wrap: wrap;
+            /* Kam jagah hone par niche shift hone ke liye */
         }
 
         @keyframes slideIn {
@@ -224,7 +226,8 @@
 
         .item-details {
             flex: 1;
-            min-width: 0;
+            min-width: 120px;
+            /* Name ke liye minimum space secure karein */
         }
 
         .item-details h4 {
@@ -248,7 +251,9 @@
         .item-actions {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
+            margin-left: auto;
+            /* Buttons ko hamesha right side push karein */
         }
 
         .qty-control {
@@ -680,12 +685,13 @@
             }
 
             .item-image {
-                width: 70px;
-                height: 70px;
+                width: 60px;
+                height: 60px;
             }
 
             .item-details h4 {
-                font-size: 0.95rem;
+                font-size: 0.9rem;
+                margin-bottom: 2px;
             }
 
             .item-details .item-desc {
