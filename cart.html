@@ -1040,6 +1040,8 @@
                     customerLat = pos.coords.latitude.toFixed(6);
                     customerLng = pos.coords.longitude.toFixed(6);
                     document.getElementById('address').value = 'GPS Location captured ✅\n\nAdd landmark (optional): ';
+                    validateCheckout();
+                    validateCheckout();
                     btn.innerHTML = '<i class="fas fa-check-circle"></i> Location Captured! (' + customerLat + ', ' + customerLng + ')';
                     btn.style.background = 'linear-gradient(135deg, #06d6a0, #05c793)';
                     showToast('Location captured! 📍 Will be sent with order.');
