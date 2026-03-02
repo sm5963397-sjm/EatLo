@@ -782,13 +782,36 @@
 
                 <div class="form-group">
                     <label>Full Name *</label>
-                    <input type="text" id="name" placeholder="Enter your full name">
+                    <input type="text" id="name" placeholder="Enter your full name" oninput="validateCheckout()">
                 </div>
 
                 <div class="form-group">
                     <label>Phone Number *</label>
-                    <input type="tel" id="phone" placeholder="10-digit mobile number" maxlength="10"
-                        oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                    <input type="tel" id="phone" maxlength="10" oninput="validateCheckout()">
+                </div>
+
+                <div class="form-group">
+                    <label>Select Your Area *</label>
+                    <select id="area" onchange="updateTotals(); validateCheckout();">
+                        style="width:100%; padding:14px 18px; border:2px solid #eee; border-radius:12px;">
+                        <option value="">Select Area</option>
+                        <option value="Arjuni/mor">Arjuni/mor</option>
+                        <option value="Morgaon/arjuni">Morgaon/arjuni</option>
+                        <option value="Tavshi">Tavshi</option>
+                        <option value="Bardtoli">Bardtoli</option>
+                        <option value="Nimgaon">Arattondi</option>
+                        <option value="Nimgaon">Nimgaon</option>
+                        <option value="Bondgaon">Bondgaon</option>
+                        <option value="Dabhana">Dabhana</option>
+                        <option value="Barabhati">Barabhati</option>
+                        <option value="Tadgaon">Tadgaon</option>
+                        <option value="Tadgaon/tola">Tadgaon/tola</option>
+                        <option value="Rajivnagar/tadgaon">Rajivnagar/tadgaon</option>
+                        <option value="Zarpada">Zarpada</option>
+                        <option value="Ithakheda">Itakheda</option>
+                        <option value="Sukhadi">Sukhadi</option>
+
+                    </select>
                 </div>
 
                 <button class="location-btn" onclick="getLocation()">
@@ -797,10 +820,10 @@
 
                 <div class="form-group">
                     <label>Delivery Address *</label>
-                    <textarea id="address" placeholder="Enter complete address with landmark"></textarea>
+                    <textarea id="address" oninput="validateCheckout()"></textarea>
                 </div>
 
-                <button class="checkout-btn" id="checkout-btn" onclick="placeOrder()">
+                <button class="checkout-btn" id="checkout-btn" onclick="placeOrder()" disabled>
                     <i class="fas fa-lock"></i> Place Order Securely
                 </button>
 
@@ -834,7 +857,29 @@
         const db = firebase.firestore();
 
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const deliveryFee = 0;
+        let deliveryFee = 0;
+
+        function getDeliveryFeeByArea(area) {
+            const charges = {
+                "Arjuni/mor": 10,
+                "Morgaon/arjuni": 20,
+                "Tavshi": 20,
+                "Bardtoli": 20,
+                "Arattondi": 20,
+                "Nimgaon": 20,
+                "Bondgaon": 40,
+                "Dabhana": 20,
+                "Barabhati": 30,
+                "Tadgaon": 10,
+                "Tadgaon/tola": 20,
+                "Rajivnagar/tadgaon": 10,
+                "Zarpada": 30,
+                "Itakheda": 40,
+                "Sukhadi": 30
+            };
+
+            return charges[area] || 0;
+        }
         let discountAmount = 0;
         let promoApplied = false;
 
@@ -909,6 +954,8 @@
         function updateTotals() {
             let subtotal = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
             const taxes = 0;
+            const selectedArea = document.getElementById('area')?.value || '';
+            deliveryFee = getDeliveryFeeByArea(selectedArea);
             const fee = cart.length > 0 ? deliveryFee : 0;
             const total = Math.max(0, subtotal + fee - discountAmount);
             const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
@@ -924,6 +971,28 @@
                 document.getElementById('discount').innerText = '-₹' + discountAmount;
             } else {
                 document.getElementById('discount-row').style.display = 'none';
+            }
+            validateCheckout();
+        }
+
+        function validateCheckout() {
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const area = document.getElementById('area').value;
+
+            const btn = document.getElementById('checkout-btn');
+
+            if (
+                cart.length > 0 &&
+                name &&
+                phone.length === 10 &&
+                area &&
+                address
+            ) {
+                btn.disabled = false;
+            } else {
+                btn.disabled = true;
             }
         }
 
@@ -989,10 +1058,12 @@
             const name = document.getElementById('name').value.trim();
             const phone = document.getElementById('phone').value.trim();
             const address = document.getElementById('address').value.trim();
+            const area = document.getElementById('area').value;
 
             if (cart.length === 0) { showToast('Your cart is empty', 'error'); return; }
             if (!name) { showToast('Please enter your name', 'error'); return; }
             if (!phone || phone.length !== 10) { showToast('Enter a valid 10-digit phone number', 'error'); return; }
+            if (!area) { showToast('Please select your area', 'error'); return; }
             if (!address) { showToast('Please enter your delivery address', 'error'); return; }
 
             const btn = document.getElementById('checkout-btn');
@@ -1003,7 +1074,7 @@
             const taxes = 0;
             const total = Math.max(0, subtotal + deliveryFee - discountAmount);
             const newOrder = {
-                name, phone, address, items: cart,
+                name, phone, address, area, items: cart,
                 subtotal, taxes, deliveryFee, discountAmount, total,
                 status: 'Confirmed',
                 date: new Date().toLocaleString('en-IN'),
