@@ -753,18 +753,19 @@
         @media (max-width: 768px) {
             @media (max-width: 768px) {
 
+                /* Home hide kar do */
+                .nav-links a[href="index.html"] {
+                    display: none;
+                }
+
+                /* Nav ko properly align karo */
                 .nav-links {
-                    gap: 5px;
+                    gap: 6px;
                 }
 
                 .nav-links a {
-                    padding: 8px 12px;
+                    padding: 0.5px 1px;
                     font-size: 0.8rem;
-                }
-
-                .logo-text {
-                    display: none;
-                    /* mobile me sirf icon dikhayega */
                 }
 
             }
