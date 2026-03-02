@@ -751,8 +751,22 @@
         }
 
         @media (max-width: 768px) {
-            .nav-links a:not(.cart-btn) {
-                display: none;
+            @media (max-width: 768px) {
+
+                .nav-links {
+                    gap: 5px;
+                }
+
+                .nav-links a {
+                    padding: 8px 12px;
+                    font-size: 0.8rem;
+                }
+
+                .logo-text {
+                    display: none;
+                    /* mobile me sirf icon dikhayega */
+                }
+
             }
 
             .hero {
