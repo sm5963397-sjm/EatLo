@@ -586,13 +586,34 @@ window.placeOrder = async function() {
     };
 
     try {
-        const res = await fetch(WORKER_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(orderPayload)
-        });
+        let res, data;
+        try {
+            res = await fetch(WORKER_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderPayload)
+            });
+        } catch (networkErr) {
+            // True network failure (no internet, DNS failure, etc.)
+            console.error('Fetch failed:', networkErr);
+            showToast('Cannot reach server. Check your internet connection.', 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-lock"></i> Place Order Securely';
+            return;
+        }
 
-        const data = await res.json();
+        try {
+            data = await res.json();
+        } catch (parseErr) {
+            // Worker returned non-JSON (Cloudflare HTML error page, crash, etc.)
+            console.error('Response not JSON. Status:', res.status, parseErr);
+            showToast(`Server error (${res.status}). Please try again in a moment.`, 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-lock"></i> Place Order Securely';
+            if (window.turnstile) window.turnstile.reset();
+            captchaToken = null;
+            return;
+        }
 
         if (res.ok && data.success) {
             localStorage.removeItem('cart');
@@ -602,7 +623,7 @@ window.placeOrder = async function() {
                 window.location.href = 'order-success.html?id=' + data.orderId;
             }, 1500);
         } else {
-            // Show server's error message to user
+            // Show server's real error message to user
             showToast(data.error || 'Order failed. Please try again.', 'error');
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-lock"></i> Place Order Securely';
@@ -611,8 +632,8 @@ window.placeOrder = async function() {
             captchaToken = null;
         }
     } catch (err) {
-        console.error('Network error:', err);
-        showToast('Network error. Check your connection.', 'error');
+        console.error('Unexpected error:', err);
+        showToast('Something went wrong: ' + err.message, 'error');
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-lock"></i> Place Order Securely';
     }
