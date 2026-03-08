@@ -1209,6 +1209,7 @@
                 cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
             } else {
                 cart.push({
+                    id: item.id,        // ← REQUIRED: Worker uses this to look up real price
                     name: item.name,
                     price: item.price,
                     image: item.image,
