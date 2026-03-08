@@ -113,11 +113,9 @@
             max-width: 1000px;
             margin: 0 auto;
             padding: 20px 15px;
-            /* Added slight side padding for mobile */
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* Centers children horizontally */
         }
 
         .page-header {
@@ -194,7 +192,6 @@
             border-bottom: 1px solid var(--light);
             animation: slideIn 0.4s ease;
             flex-wrap: wrap;
-            /* Kam jagah hone par niche shift hone ke liye */
         }
 
         @keyframes slideIn {
@@ -227,7 +224,6 @@
         .item-details {
             flex: 1;
             min-width: 120px;
-            /* Name ke liye minimum space secure karein */
         }
 
         .item-details h4 {
@@ -253,7 +249,6 @@
             align-items: center;
             gap: 10px;
             margin-left: auto;
-            /* Buttons ko hamesha right side push karein */
         }
 
         .qty-control {
@@ -375,52 +370,6 @@
             top: 100px;
         }
 
-        .promo-box {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .promo-box input {
-            flex: 1;
-            padding: 14px 18px;
-            border: 2px solid var(--light);
-            border-radius: var(--radius-sm);
-            font-family: inherit;
-            font-size: 0.95rem;
-            transition: var(--transition);
-        }
-
-        .promo-box input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .promo-box button {
-            padding: 14px 22px;
-            background: var(--gradient-secondary);
-            color: white;
-            border: none;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-family: inherit;
-            font-weight: 600;
-            transition: var(--transition);
-        }
-
-        .promo-box button:hover {
-            transform: scale(1.05);
-        }
-
-        .promo-applied {
-            font-size: 0.82rem;
-            color: var(--success);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 18px;
-        }
-
         .summary-row {
             display: flex;
             justify-content: space-between;
@@ -485,7 +434,8 @@
         }
 
         .form-group input,
-        .form-group textarea {
+        .form-group textarea,
+        .form-group select {
             width: 100%;
             padding: 14px 18px;
             border: 2px solid var(--light);
@@ -498,7 +448,8 @@
         }
 
         .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group textarea:focus,
+        .form-group select:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
@@ -512,7 +463,7 @@
 
         .location-btn {
             width: 100%;
-            background: linear-gradient(135deg, var(--success), #05c793);
+            background: linear-gradient(135deg, var(--warning), #f9bc2a);
             color: white;
             border: none;
             padding: 14px;
@@ -527,11 +478,12 @@
             gap: 10px;
             transition: var(--transition);
             font-size: 0.9rem;
+            color: var(--secondary);
         }
 
-        .location-btn:hover {
+        .location-btn:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(6, 214, 160, 0.3);
+            box-shadow: 0 10px 30px rgba(255, 209, 102, 0.3);
         }
 
         .checkout-btn {
@@ -649,7 +601,6 @@
         @media (max-width: 1024px) {
             .cart-layout {
                 display: flex;
-                /* Switch to Flex for easier centering on mobile */
                 flex-direction: column;
                 align-items: center;
                 gap: 20px;
@@ -674,9 +625,7 @@
             .order-summary {
                 width: 100%;
                 max-width: 500px;
-                /* Limits width so it looks like a mobile app */
                 margin: 0 auto;
-                /* Perfect centering */
             }
 
             .cart-item {
@@ -700,17 +649,6 @@
 
             .summary-row.total {
                 font-size: 1.1rem;
-            }
-
-            .cart-layout {
-                width: 100%;
-                margin: 0 auto;
-            }
-
-            .cart-section,
-            .order-summary {
-                width: 100%;
-                margin: 0 auto;
             }
 
             nav {
@@ -756,14 +694,6 @@
                     <span><i class="fas fa-receipt"></i> Order Summary</span>
                 </div>
 
-                <!-- <div class="promo-box">
-                    <input type="text" id="promo-code" placeholder="Promo code (e.g. EATLO50)">
-                    <button onclick="applyPromo()">Apply</button>
-                </div>
-                <div class="promo-applied" id="promo-status" style="display:none;">
-                    <i class="fas fa-tag"></i> <span id="promo-msg"></span>
-                </div> -->
-
                 <div class="summary-row"><span>Subtotal</span><span id="subtotal">₹0</span></div>
                 <div class="summary-row"><span>Delivery Fee</span><span id="delivery-fee">₹0</span></div>
 
@@ -787,41 +717,16 @@
 
                 <div class="form-group">
                     <label>Phone Number *</label>
-                    <input type="tel" id="phone" maxlength="10" oninput="validateCheckout()">
-                </div>
-
-                <div class="form-group">
-                    <label>Select Your Area *</label>
-                    <select id="area" onchange="updateTotals(); validateCheckout();">
-                        style="width:100%; padding:14px 18px; border:2px solid #eee; border-radius:12px;">
-                        <option value="">Select Area</option>
-                        <option value="Arjuni/mor">Arjuni/mor</option>
-                        <option value="Morgaon/arjuni">Morgaon/arjuni</option>
-                        <option value="Tavshi">Tavshi</option>
-                        <option value="Bardtoli">Bardtoli</option>
-                        <option value="Nimgaon">Arattondi</option>
-                        <option value="Nimgaon">Nimgaon</option>
-                        <option value="Bondgaon">Bondgaon</option>
-                        <option value="Dabhana">Dabhana</option>
-                        <option value="Barabhati">Barabhati</option>
-                        <option value="Tadgaon">Tadgaon</option>
-                        <option value="Tadgaon/tola">Tadgaon/tola</option>
-                        <option value="Rajivnagar/tadgaon">Rajivnagar/tadgaon</option>
-                        <option value="Zarpada">Zarpada</option>
-                        <option value="Itakheda">Itakheda</option>
-                        <option value="Sukhadi">Sukhadi</option>
-                        <option value="Bodara">Bodara</option>
-
-                    </select>
+                    <input type="tel" id="phone" maxlength="10" placeholder="10-digit Indian mobile number" oninput="this.value=this.value.replace(/[^0-9]/g,''); validateCheckout();">
                 </div>
 
                 <button class="location-btn" onclick="getLocation()">
-                    <i class="fas fa-location-crosshairs"></i> Use My Current Location
+                    <i class="fas fa-location-crosshairs"></i> Use My Current Location (Required)
                 </button>
 
                 <div class="form-group">
-                    <label>Delivery Address *</label>
-                    <textarea id="address" oninput="validateCheckout()"></textarea>
+                    <label>Delivery Address & Landmark *</label>
+                    <textarea id="address" placeholder="House/Flat No, Street, Landmark" oninput="validateCheckout()"></textarea>
                 </div>
 
                 <button class="checkout-btn" id="checkout-btn" onclick="placeOrder()" disabled>
@@ -858,30 +763,7 @@
         const db = firebase.firestore();
 
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        let deliveryFee = 0;
-
-        function getDeliveryFeeByArea(area) {
-            const charges = {
-                "Arjuni/mor": 10,
-                "Morgaon/arjuni": 20,
-                "Tavshi": 20,
-                "Bardtoli": 20,
-                "Arattondi": 20,
-                "Nimgaon": 20,
-                "Bondgaon": 40,
-                "Dabhana": 20,
-                "Barabhati": 30,
-                "Tadgaon": 10,
-                "Tadgaon/tola": 20,
-                "Rajivnagar/tadgaon": 10,
-                "Zarpada": 30,
-                "Itakheda": 40,
-                "Sukhadi": 30,
-                "Bodara": 30
-            };
-
-            return charges[area] || 0;
-        }
+        let deliveryFee = 0; // Defaulting to flat ₹20 fee (assigned inside updateTotals)
         let discountAmount = 0;
         let promoApplied = false;
 
@@ -900,7 +782,6 @@
                 `;
                 document.getElementById('checkout-btn').disabled = true;
             } else {
-                document.getElementById('checkout-btn').disabled = false;
                 cart.forEach((item, index) => {
                     const qty = item.quantity || 1;
                     container.innerHTML += `
@@ -955,17 +836,16 @@
 
         function updateTotals() {
             let subtotal = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
-            const taxes = 0;
-            const selectedArea = document.getElementById('area')?.value || '';
-            deliveryFee = getDeliveryFeeByArea(selectedArea);
-            const fee = cart.length > 0 ? deliveryFee : 0;
-            const total = Math.max(0, subtotal + fee - discountAmount);
+            
+            // Flat delivery fee configured here instead of area-based logic
+            deliveryFee = cart.length > 0 ? 20 : 0; 
+
+            const total = Math.max(0, subtotal + deliveryFee - discountAmount);
             const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
             document.getElementById('item-count').innerText = totalItems + (totalItems === 1 ? ' item' : ' items');
             document.getElementById('subtotal').innerText = '₹' + subtotal;
-            document.getElementById('delivery-fee').innerText = '₹' + fee;
-
+            document.getElementById('delivery-fee').innerText = '₹' + deliveryFee;
             document.getElementById('total-price').innerText = '₹' + total;
 
             if (discountAmount > 0) {
@@ -981,16 +861,18 @@
             const name = document.getElementById('name').value.trim();
             const phone = document.getElementById('phone').value.trim();
             const address = document.getElementById('address').value.trim();
-            const area = document.getElementById('area').value;
-
             const btn = document.getElementById('checkout-btn');
+
+            // Regex test for valid Indian mobile numbers (starts with 6-9, strictly 10 digits)
+            const isPhoneValid = /^[6-9]\d{9}$/.test(phone);
 
             if (
                 cart.length > 0 &&
                 name &&
-                phone.length === 10 &&
-                area &&
-                address
+                isPhoneValid &&
+                address &&
+                customerLat &&  // Requires successful GPS capture
+                customerLng     // Requires successful GPS capture
             ) {
                 btn.disabled = false;
             } else {
@@ -998,88 +880,116 @@
             }
         }
 
-        window.applyPromo = function () {
-            if (promoApplied) { showToast('Promo already applied!', 'error'); return; }
-            if (cart.length === 0) { showToast('Add items first!', 'error'); return; }
+        // ================= DISTANCE CALCULATION LOGIC =================
+        const STORE_LAT = 20.820921;
+        const STORE_LNG = 80.021687;
+        const MAX_DELIVERY_RADIUS_KM = 10;
 
-            const code = document.getElementById('promo-code').value.trim().toUpperCase();
-            let subtotal = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
-            const statusEl = document.getElementById('promo-status');
-            const msgEl = document.getElementById('promo-msg');
-
-            if (code === 'EATLO50') {
-                discountAmount = Math.round(subtotal * 0.5);
-                promoApplied = true;
-                statusEl.style.display = 'flex';
-                msgEl.innerText = '50% OFF applied! You save ₹' + discountAmount;
-                updateTotals();
-                showToast('Promo applied! 50% OFF 🎉');
-            } else if (code === 'EATLO100') {
-                discountAmount = Math.min(100, subtotal);
-                promoApplied = true;
-                statusEl.style.display = 'flex';
-                msgEl.innerText = '₹100 OFF applied!';
-                updateTotals();
-                showToast('Promo applied! ₹100 OFF 🎉');
-            } else if (code === '') {
-                showToast('Please enter a promo code', 'error');
-            } else {
-                showToast('Invalid promo code', 'error');
-            }
-        };
-
-        // Store GPS coords globally so we can send them with the order
         let customerLat = null;
         let customerLng = null;
 
+        // Haversine formula to calculate distance between two coordinates
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Earth's radius in kilometers
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c; // Returns distance in KM
+        }
+
         window.getLocation = function () {
-            if (!navigator.geolocation) { showToast('Geolocation not supported', 'error'); return; }
+            if (!navigator.geolocation) { showToast('Geolocation not supported by your browser', 'error'); return; }
             const btn = document.querySelector('.location-btn');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Getting location...';
+            
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking location...';
             btn.disabled = true;
+
             navigator.geolocation.getCurrentPosition(
                 pos => {
-                    customerLat = pos.coords.latitude.toFixed(6);
-                    customerLng = pos.coords.longitude.toFixed(6);
-                    document.getElementById('address').value = 'GPS Location captured ✅\n\nAdd landmark (optional): ';
+                    const userLat = pos.coords.latitude;
+                    const userLng = pos.coords.longitude;
+                    
+                    const distance = calculateDistance(STORE_LAT, STORE_LNG, userLat, userLng);
+
+                    // Check if outside 10KM delivery zone
+                    if (distance > MAX_DELIVERY_RADIUS_KM) {
+                        btn.innerHTML = '<i class="fas fa-times-circle"></i> Out of Delivery Area';
+                        btn.style.background = 'var(--danger)';
+                        btn.style.color = 'white';
+                        showToast(`Sorry, we only deliver within ${MAX_DELIVERY_RADIUS_KM}km. You are ${distance.toFixed(1)}km away.`, 'error');
+                        
+                        customerLat = null;
+                        customerLng = null;
+                        validateCheckout();
+                        
+                        // Reset button after 4 seconds so they can try again if they move
+                        setTimeout(() => {
+                            btn.innerHTML = '<i class="fas fa-location-crosshairs"></i> Try Location Again';
+                            btn.disabled = false;
+                            btn.style.background = 'linear-gradient(135deg, var(--warning), #f9bc2a)';
+                            btn.style.color = 'var(--secondary)';
+                        }, 4000);
+                        return;
+                    }
+
+                    // Success - Inside delivery zone
+                    customerLat = userLat.toFixed(6);
+                    customerLng = userLng.toFixed(6);
+                    document.getElementById('address').value = 'GPS Location captured ✅\n\nAdd landmark/house number: ';
+                    
                     validateCheckout();
-                    validateCheckout();
-                    btn.innerHTML = '<i class="fas fa-check-circle"></i> Location Captured! (' + customerLat + ', ' + customerLng + ')';
+                    btn.innerHTML = '<i class="fas fa-check-circle"></i> Location Verified (' + distance.toFixed(1) + 'km)';
                     btn.style.background = 'linear-gradient(135deg, #06d6a0, #05c793)';
-                    showToast('Location captured! 📍 Will be sent with order.');
+                    btn.style.color = 'white';
+                    showToast('Location verified! 📍 You are within the delivery zone.');
                 },
-                () => {
+                (error) => {
                     btn.innerHTML = '<i class="fas fa-location-crosshairs"></i> Use My Current Location';
                     btn.disabled = false;
-                    btn.style.background = '';
-                    showToast('Could not get location. Enter manually.', 'error');
+                    btn.style.background = 'linear-gradient(135deg, var(--warning), #f9bc2a)';
+                    btn.style.color = 'var(--secondary)';
+                    
+                    if (error.code === error.PERMISSION_DENIED) {
+                        showToast('Please enable Location Permissions to place an order.', 'error');
+                    } else {
+                        showToast('Could not get location. Ensure GPS is on.', 'error');
+                    }
+                    
+                    customerLat = null;
+                    customerLng = null;
+                    validateCheckout();
                 },
-                { timeout: 10000 }
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
             );
         };
+        // ==============================================================
 
         window.placeOrder = async function () {
             const name = document.getElementById('name').value.trim();
             const phone = document.getElementById('phone').value.trim();
             const address = document.getElementById('address').value.trim();
-            const area = document.getElementById('area').value;
+            
+            const isPhoneValid = /^[6-9]\d{9}$/.test(phone);
 
             if (cart.length === 0) { showToast('Your cart is empty', 'error'); return; }
             if (!name) { showToast('Please enter your name', 'error'); return; }
-            if (!phone || phone.length !== 10) { showToast('Enter a valid 10-digit phone number', 'error'); return; }
-            if (!area) { showToast('Please select your area', 'error'); return; }
+            if (!isPhoneValid) { showToast('Enter a valid 10-digit Indian mobile number', 'error'); return; }
             if (!address) { showToast('Please enter your delivery address', 'error'); return; }
+            if (!customerLat || !customerLng) { showToast('Location verification required. Please click "Use My Current Location"', 'error'); return; }
 
             const btn = document.getElementById('checkout-btn');
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
 
             let subtotal = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
-            const taxes = 0;
             const total = Math.max(0, subtotal + deliveryFee - discountAmount);
+            
             const newOrder = {
-                name, phone, address, area, items: cart,
-                subtotal, taxes, deliveryFee, discountAmount, total,
+                name, phone, address, items: cart,
+                subtotal, taxes: 0, deliveryFee, discountAmount, total,
                 status: 'Confirmed',
                 date: new Date().toLocaleString('en-IN'),
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
@@ -1090,23 +1000,19 @@
                 localStorage.removeItem('cart');
                 localStorage.setItem('customerPhone', phone);
 
-                // ===== TELEGRAM NOTIFICATIONS (All Recipients) =====
                 const TELEGRAM_TOKEN = "8490371740:AAEkQ3T7D563qbsjf47UG3ZgJmlmvmC4wPU";
-                // Add as many Chat IDs as you want here:
                 const RECIPIENTS = [
-                    "8170295182",   // Developer (you)
-                    "5176824325",     // Owner - replace with actual ID
-                    "8380826774",    // Partner - replace with actual ID
-                    "8286451273",    // Partner - replace with actual ID
-                    // "PARTNER_CHAT_ID_HERE",    // Partner - replace with actual ID
+                    "8170295182", 
+                    "5176824325", 
+                    "8380826774", 
+                    "8286451273"
                 ];
 
                 const itemsList = cart.map(i => `• ${i.name} ×${i.quantity || 1}`).join('\n');
 
-                // Build Google Maps link if location was captured
                 let locationLine = '';
                 if (customerLat && customerLng) {
-                    const mapsLink = `https://www.google.com/maps?q=${customerLat},${customerLng}`;
+                    const mapsLink = `https://www.google.com/maps/search/?api=1&query=${customerLat},${customerLng}`;
                     locationLine = `\n📍 *Live Location:* [Open in Google Maps](${mapsLink})`;
                 }
 
@@ -1120,7 +1026,6 @@
                     `⏰ ${new Date().toLocaleString('en-IN')}\n\n` +
                     `🔗 [View in Admin](https://eatlo.food/admin.html)`;
 
-                // Send to all recipients simultaneously
                 RECIPIENTS.forEach(chatId => {
                     fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
                         method: "POST",
@@ -1128,7 +1033,6 @@
                         body: JSON.stringify({ chat_id: chatId, text: msg, parse_mode: "Markdown" })
                     }).catch(() => { });
                 });
-                // ===================================================
 
                 showToast('Order placed! Redirecting... 🥳');
                 setTimeout(() => { window.location.href = 'order-success.html?id=' + docRef.id; }, 1500);
@@ -1157,5 +1061,3 @@
 </body>
 
 </html>
-
-
