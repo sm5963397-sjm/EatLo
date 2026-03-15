@@ -1153,12 +1153,11 @@
                 lat: customerLat,
                 lng: customerLng,
                 captchaToken,
-                // Send a client-estimated total only for mismatch-logging purposes on server
-                total: cart.reduce((s, i) => s + i.price * (i.quantity || 1), 0) + 20,
+                // Fix: We now use currentDeliveryFee instead of a hardcoded 20
+                total: cart.reduce((s, i) => s + i.price * (i.quantity || 1), 0) + currentDeliveryFee,
                 items: cart.map(item => ({
                     id: item.id,           // server validates this exists in menu
                     quantity: item.quantity // server re-checks bounds
-                    // NOTE: price intentionally omitted — server uses its own authoritative price
                 }))
             };
 
