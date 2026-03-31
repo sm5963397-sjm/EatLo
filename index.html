@@ -508,20 +508,19 @@
 
         /* ===== STORE & VENDOR STYLING ===== */
         .store-section {
-            margin-bottom: 50px;
-            background: white;
-            padding: 30px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-sm);
+            margin-bottom: 30px;
+            padding: 0 20px;
+            /* side spacing only */
         }
 
         .store-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--light);
+            margin-bottom: 15px;
+            padding: 0 5px;
+            border: none;
+            /* line hata do */
         }
 
         .store-header h2 {
@@ -531,6 +530,8 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 700;
         }
 
         .store-header h2 i {
@@ -557,12 +558,18 @@
 
         /* Grid */
         .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 10px 20px;
+            scroll-behavior: smooth;
+            scroll-snap-type: x mandatory;
         }
 
-        /* Card */
+        .grid::-webkit-scrollbar {
+            display: none;
+        }
+
         .card {
             background: white;
             border-radius: var(--radius-sm);
@@ -570,6 +577,22 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             transition: var(--transition);
             border: 1px solid var(--light);
+
+            min-width: 260px;
+            max-width: 260px;
+            flex-shrink: 0;
+
+            scroll-snap-align: start;
+            margin-bottom: 5px;
+
+            .card:first-child {
+                margin-left: 5px;
+            }
+
+            .card:last-child {
+                margin-right: 5px;
+            }
+
         }
 
         .card:hover {
@@ -784,11 +807,7 @@
             }
 
             .store-section {
-                padding: 20px 15px;
-            }
-
-            .grid {
-                grid-template-columns: 1fr;
+                padding: 20px;
             }
 
             .card {
