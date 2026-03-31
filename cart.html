@@ -734,93 +734,88 @@
                     <div class="field-msg" id="name-msg">Please enter a valid name (letters only, 2–80 chars)</div>
                 </div>
 
+
+
                 <div class="form-group">
                     <label>Phone Number *</label>
-                    <!--
-                  SECURITY: maxlength=10, numeric-only via oninput filter.
-                  Prevents injection of non-numeric data client-side.
-                  Server will re-validate with regex regardless.
-                -->
-                    <div class="form-group">
-                        <label>Phone Number *</label>
-                        <input type="tel" id="phone" maxlength="10" placeholder="10-digit Indian mobile number"
-                            oninput="this.value=this.value.replace(/[^0-9]/g,''); validateField('phone'); validateCheckout();">
-                        <div class="field-msg" id="phone-msg">Must start with 6–9 and be exactly 10 digits</div>
-                    </div>
-
-                    <div id="otp-wrapper" style="display: none;">
-                        <div class="form-group">
-                            <button onclick="sendOTP()" class="location-btn" id="send-otp-btn">
-                                Send OTP
-                            </button>
-                        </div>
-
-                        <div id="otp-section" style="display:none;">
-                            <div class="form-group">
-                                <input type="text" id="otp" placeholder="Enter OTP">
-                            </div>
-
-                            <div class="form-group">
-                                <button onclick="verifyOTP()" class="location-btn">
-                                    Verify OTP
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div id="otp-section" style="display:none;">
-                            <div class="form-group">
-                                <input type="text" id="otp" placeholder="Enter OTP">
-                            </div>
-
-                            <div class="form-group">
-                                <button onclick="verifyOTP()" class="location-btn">
-                                    Verify OTP
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
+                    <input type="tel" id="phone" maxlength="10" placeholder="10-digit Indian mobile number"
+                        oninput="this.value=this.value.replace(/[^0-9]/g,''); validateField('phone'); validateCheckout();">
                     <div class="field-msg" id="phone-msg">Must start with 6–9 and be exactly 10 digits</div>
                 </div>
 
-                <button class="location-btn" id="location-btn" onclick="getLocation()">
-                    <i class="fas fa-location-crosshairs"></i> Use My Current Location (Required)
-                </button>
+                <div id="otp-wrapper" style="display: none;">
+                    <div class="form-group">
+                        <button onclick="sendOTP()" class="location-btn" id="send-otp-btn">
+                            Send OTP
+                        </button>
+                    </div>
 
+                    <div id="otp-section" style="display:none;">
+                        <div class="form-group">
+                            <input type="text" id="otp" placeholder="Enter OTP">
+                        </div>
+
+                        <div class="form-group">
+                            <button onclick="verifyOTP()" class="location-btn">
+                                Verify OTP
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <div class="form-group">
-                    <label>Delivery Address & Landmark *</label>
-                    <textarea id="address" maxlength="500" placeholder="House/Flat No, Street, Landmark"
-                        oninput="validateCheckout()"></textarea>
+                    <div id="otp-section" style="display:none;">
+                        <div class="form-group">
+                            <input type="text" id="otp" placeholder="Enter OTP">
+                        </div>
+
+                        <div class="form-group">
+                            <button onclick="verifyOTP()" class="location-btn">
+                                Verify OTP
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
-                <!--
+                <div class="field-msg" id="phone-msg">Must start with 6–9 and be exactly 10 digits</div>
+            </div>
+
+            <button class="location-btn" id="location-btn" onclick="getLocation()">
+                <i class="fas fa-location-crosshairs"></i> Use My Current Location (Required)
+            </button>
+
+            <div class="form-group">
+                <label>Delivery Address & Landmark *</label>
+                <textarea id="address" maxlength="500" placeholder="House/Flat No, Street, Landmark"
+                    oninput="validateCheckout()"></textarea>
+            </div>
+
+            <!--
               SECURITY: Cloudflare Turnstile CAPTCHA.
               Replace data-sitekey with your key from dash.cloudflare.com/turnstile.
               The token is read via window.turnstile.getResponse() before submission.
               Without a valid token the server REJECTS the order entirely.
             -->
-                <div class="captcha-wrapper">
-                    <div class="cf-turnstile" data-sitekey="0x4AAAAAACn8r0pAefCwnJRT" data-callback="onCaptchaSolved"
-                        data-expired-callback="onCaptchaExpired" data-theme="light">
-                    </div>
-                </div>
-
-                <button class="checkout-btn" id="checkout-btn" onclick="placeOrder()" disabled>
-                    <i class="fas fa-lock"></i> Place Order Securely
-                </button>
-
-                <button class="clear-btn" onclick="clearCart()">
-                    <i class="fas fa-trash"></i> Clear Cart
-                </button>
-
-                <div class="trust-badges">
-                    <div class="trust-badge"><i class="fas fa-shield-alt"></i><span>Secure</span></div>
-                    <div class="trust-badge"><i class="fas fa-truck"></i><span>Fast Delivery</span></div>
-                    <div class="trust-badge"><i class="fas fa-undo"></i><span>Easy Refund</span></div>
+            <div class="captcha-wrapper">
+                <div class="cf-turnstile" data-sitekey="0x4AAAAAACn8r0pAefCwnJRT" data-callback="onCaptchaSolved"
+                    data-expired-callback="onCaptchaExpired" data-theme="light">
                 </div>
             </div>
+
+            <button class="checkout-btn" id="checkout-btn" onclick="placeOrder()" disabled>
+                <i class="fas fa-lock"></i> Place Order Securely
+            </button>
+
+            <button class="clear-btn" onclick="clearCart()">
+                <i class="fas fa-trash"></i> Clear Cart
+            </button>
+
+            <div class="trust-badges">
+                <div class="trust-badge"><i class="fas fa-shield-alt"></i><span>Secure</span></div>
+                <div class="trust-badge"><i class="fas fa-truck"></i><span>Fast Delivery</span></div>
+                <div class="trust-badge"><i class="fas fa-undo"></i><span>Easy Refund</span></div>
+            </div>
         </div>
+    </div>
     </div>
 
     <script>
