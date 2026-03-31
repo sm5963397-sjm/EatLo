@@ -741,8 +741,46 @@
                   Prevents injection of non-numeric data client-side.
                   Server will re-validate with regex regardless.
                 -->
-                    <input type="tel" id="phone" maxlength="10" placeholder="10-digit Indian mobile number"
-                        oninput="this.value=this.value.replace(/[^0-9]/g,''); validateField('phone'); validateCheckout();">
+                    <div class="form-group">
+                        <label>Phone Number *</label>
+                        <input type="tel" id="phone" maxlength="10" placeholder="10-digit Indian mobile number"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,''); validateField('phone'); validateCheckout();">
+                        <div class="field-msg" id="phone-msg">Must start with 6–9 and be exactly 10 digits</div>
+                    </div>
+
+                    <div id="otp-wrapper" style="display: none;">
+                        <div class="form-group">
+                            <button onclick="sendOTP()" class="location-btn" id="send-otp-btn">
+                                Send OTP
+                            </button>
+                        </div>
+
+                        <div id="otp-section" style="display:none;">
+                            <div class="form-group">
+                                <input type="text" id="otp" placeholder="Enter OTP">
+                            </div>
+
+                            <div class="form-group">
+                                <button onclick="verifyOTP()" class="location-btn">
+                                    Verify OTP
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div id="otp-section" style="display:none;">
+                            <div class="form-group">
+                                <input type="text" id="otp" placeholder="Enter OTP">
+                            </div>
+
+                            <div class="form-group">
+                                <button onclick="verifyOTP()" class="location-btn">
+                                    Verify OTP
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="field-msg" id="phone-msg">Must start with 6–9 and be exactly 10 digits</div>
                 </div>
 
@@ -786,16 +824,7 @@
     </div>
 
     <script>
-        // ============================================================
-        //  SECURITY CONFIG
-        // ============================================================
 
-        /**
-         * SECURITY: All orders are submitted to our Cloudflare Worker backend.
-         * The Worker validates everything server-side and only then saves to
-         * Firestore / sends the Telegram notification.
-         * Direct Firestore / Telegram calls have been REMOVED from the frontend.
-         */
         const WORKER_URL = "https://eatlo-orders.sm5963397.workers.dev/place-order";
 
         // ── Quantity bounds mirrored from server (frontend enforcement only) ──
@@ -810,6 +839,8 @@
         let customerLat = null;
         let customerLng = null;
         let captchaToken = null; // set by Turnstile callback
+        let isPhoneVerified = false;
+        let generatedOTP = null;
         let currentDeliveryFee = 0; // New variable to track the dynamic fee
 
         // ── Cart: load and sanitize from localStorage ────────────────
@@ -1014,16 +1045,19 @@
             const phoneOk = /^[6-9]\d{9}$/.test(phone);
             const addressOk = address.length >= 5;
 
-            // SECURITY: all must pass including GPS capture and CAPTCHA
-            btn.disabled = !(
+            const canPlaceOrder =
                 cart.length > 0 &&
                 nameOk &&
                 phoneOk &&
                 addressOk &&
-                customerLat !== null &&
-                customerLng !== null &&
-                captchaToken !== null  // Turnstile must be solved
-            );
+                captchaToken !== null &&
+                (
+                    isLocationVerified  // GPS working
+                    ||
+                    isPhoneVerified     // OTP backup
+                );
+
+            btn.disabled = !canPlaceOrder;
         }
 
         // ============================================================
@@ -1047,6 +1081,8 @@
 
             navigator.geolocation.getCurrentPosition(
                 pos => {
+                    // ✅ LOCATION SUCCESS: Hide the OTP wrapper completely
+                    document.getElementById("otp-wrapper").style.display = "none";
 
                     const userLat = pos.coords.latitude;
                     const userLng = pos.coords.longitude;
@@ -1067,7 +1103,6 @@
                         return;
                     }
 
-                    // --- STEP 2: Fee Logic Start ---
                     if (dist <= 2) {
                         currentDeliveryFee = 10;
                     } else if (dist <= 5) {
@@ -1077,18 +1112,12 @@
                     } else {
                         currentDeliveryFee = 50;
                     }
-                    // --- STEP 2: Fee Logic End ---
 
-                    // Aapka puraana code jo photo mein hai:
                     customerLat = parseFloat(userLat.toFixed(6));
                     customerLng = parseFloat(userLng.toFixed(6));
+                    isLocationVerified = true;
 
-                    // --- STEP 3: Update Totals Call ---
                     updateTotals();
-
-                    // Store with limited precision (6 decimals ≈ ~10cm accuracy)
-                    customerLat = parseFloat(userLat.toFixed(6));
-                    customerLng = parseFloat(userLng.toFixed(6));
 
                     document.getElementById('address').value = 'GPS Location captured ✅\n\nAdd landmark/house number: ';
                     validateCheckout();
@@ -1098,10 +1127,14 @@
                     showToast('Location verified! 📍 You are within the delivery zone.');
                 },
                 err => {
+                    // ❌ LOCATION FAILED: Show the OTP wrapper so they can verify manually
+                    document.getElementById("otp-wrapper").style.display = "block";
+
                     btn.innerHTML = '<i class="fas fa-location-crosshairs"></i> Use My Current Location';
                     btn.disabled = false;
                     btn.style.cssText = '';
                     customerLat = customerLng = null;
+                    isLocationVerified = false;
                     validateCheckout();
                     showToast(
                         err.code === err.PERMISSION_DENIED
@@ -1114,20 +1147,11 @@
             );
         };
 
-        // ============================================================
-        //  PLACE ORDER
-        // ============================================================
-
-        /**
-         * SECURITY SUMMARY for placeOrder():
-         *  - Re-validates all fields before submission (defense-in-depth)
-         *  - Sends CAPTCHA token to backend for server-side Turnstile verify
-         *  - Sends GPS coords so server can re-check delivery zone
-         *  - Sends item IDs (not prices) — server fetches prices from its own menu KV
-         *  - Does NOT directly call Firebase or Telegram — all via Worker
-         *  - Disables button immediately to prevent double-submit
-         */
         window.placeOrder = async function () {
+            if (!isLocationVerified && !isPhoneVerified) {
+                showToast("Location ya OTP verify karo", "error");
+                return;
+            }
             const name = document.getElementById('name').value.trim();
             const phone = document.getElementById('phone').value.trim();
             const address = document.getElementById('address').value.trim();
@@ -1215,11 +1239,6 @@
             }
         };
 
-        // ============================================================
-        //  UTILITIES
-        // ============================================================
-
-        /** SECURITY: HTML-escape to prevent XSS when inserting user/API data into DOM */
         function escapeHtml(str) {
             return String(str)
                 .replace(/&/g, '&amp;')
@@ -1243,6 +1262,32 @@
 
         // ── Init ─────────────────────────────────────────────────────
         renderCart();
+
+        function sendOTP() {
+            const phone = document.getElementById('phone').value;
+
+            if (!/^[6-9]\d{9}$/.test(phone)) {
+                showToast("Enter valid phone first", "error");
+                return;
+            }
+
+            generatedOTP = Math.floor(1000 + Math.random() * 9000);
+
+            alert("OTP: " + generatedOTP);
+            showToast("OTP sent!");
+        }
+
+        function verifyOTP() {
+            const userOTP = document.getElementById('otp').value;
+
+            if (parseInt(userOTP) === generatedOTP) {
+                isPhoneVerified = true;
+                showToast("Phone verified ✅");
+                validateCheckout();
+            } else {
+                showToast("Wrong OTP ❌", "error");
+            }
+        }
     </script>
 </body>
 
