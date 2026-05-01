@@ -1079,18 +1079,17 @@
                     }
                     // --- STEP 2: Fee Logic End ---
 
-                    // Aapka puraana code jo photo mein hai:
-                    customerLat = parseFloat(userLat.toFixed(6));
-                    customerLng = parseFloat(userLng.toFixed(6));
-
-                    // --- STEP 3: Update Totals Call ---
-                    updateTotals();
-
                     // Store with limited precision (6 decimals ≈ ~10cm accuracy)
                     customerLat = parseFloat(userLat.toFixed(6));
                     customerLng = parseFloat(userLng.toFixed(6));
 
-                    document.getElementById('address').value = 'GPS Location captured ✅\n\nAdd landmark/house number: ';
+                    const addressField = document.getElementById('address');
+                    addressField.value = 'GPS Location captured ✅\n\nAdd landmark/house number: ';
+
+                    // Programmatic value change does not always trigger validation,
+                    // so we manually fire input and refresh totals/button state.
+                    addressField.dispatchEvent(new Event('input'));
+                    updateTotals();
                     validateCheckout();
                     btn.innerHTML = `<i class="fas fa-check-circle"></i> Location Verified (${dist.toFixed(1)}km)`;
                     btn.style.background = 'linear-gradient(135deg,#06d6a0,#05c793)';
@@ -1110,7 +1109,7 @@
                         'error'
                     );
                 },
-                { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
             );
         };
 
@@ -1137,7 +1136,7 @@
             if (!/^[a-zA-Z\s.\-]{2,80}$/.test(name)) { showToast('Please enter a valid name', 'error'); return; }
             if (!/^[6-9]\d{9}$/.test(phone)) { showToast('Enter a valid 10-digit mobile number', 'error'); return; }
             if (address.length < 5) { showToast('Please enter your delivery address', 'error'); return; }
-            if (!customerLat || !customerLng) { showToast('Location verification required', 'error'); return; }
+            if (customerLat === null || customerLng === null) { showToast('Location verification required', 'error'); return; }
             if (!captchaToken) { showToast('Please complete the CAPTCHA', 'error'); return; }
 
             const btn = document.getElementById('checkout-btn');
@@ -1194,6 +1193,7 @@
                 if (res.ok && data.success) {
                     localStorage.removeItem('cart');
                     localStorage.setItem('customerPhone', phone);
+                    if (data.orderId) localStorage.setItem('lastOrderId', data.orderId);
                     showToast('Order placed! Redirecting... 🥳');
                     setTimeout(() => {
                         window.location.href = 'order-success.html?id=' + data.orderId;
