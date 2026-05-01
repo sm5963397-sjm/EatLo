@@ -594,54 +594,55 @@
                 renderMenu();
                 updateStats();
             }, (err) => {
+                console.error("Menu listener error:", err);
                 db.collection("menuItems").get().then(snapshot => {
                     menu = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     renderMenu();
                     updateStats();
+                }).catch(e => {
+                    console.error("Menu fallback failed:", e);
+                    showToast('Menu Error', e.message, 'error');
                 });
             });
 
             // Fetch Orders
-db.collection("orders").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
-    const newOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            db.collection("orders").onSnapshot((snapshot) => {
+                const newOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-    if (!isFirstLoad) {
-        newOrders.forEach(order => {
-            if (!knownOrderIds.has(order.id)) {
-                fireNewOrderNotification(order);
-            }
-        });
-    }
+                newOrders.sort((a, b) => getOrderTime(b) - getOrderTime(a));
 
-    newOrders.forEach(o => knownOrderIds.add(o.id));
-    isFirstLoad = false;
+                if (!isFirstLoad) {
+                    newOrders.forEach(order => {
+                        if (!knownOrderIds.has(order.id)) {
+                            fireNewOrderNotification(order);
+                        }
+                    });
+                }
 
-    orders = newOrders;
-    renderOrders();
-    updateStats();
+                newOrders.forEach(o => knownOrderIds.add(o.id));
+                isFirstLoad = false;
 
-}, (err) => {
-    console.error("Orders listener error:", err);
+                orders = newOrders;
+                renderOrders();
+                updateStats();
 
-    db.collection("orders").get().then(snapshot => {
-        orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            }, (err) => {
+                console.error("Orders listener error:", err);
 
-        orders.sort((a, b) => {
-            const ta = a.timestamp || Date.parse(a.createdAt || '') || 0;
-            const tb = b.timestamp || Date.parse(b.createdAt || '') || 0;
-            return tb - ta;
-        });
+                db.collection("orders").get().then(snapshot => {
+                    orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    orders.sort((a, b) => getOrderTime(b) - getOrderTime(a));
 
-        orders.forEach(o => knownOrderIds.add(o.id));
-        isFirstLoad = false;
+                    orders.forEach(o => knownOrderIds.add(o.id));
+                    isFirstLoad = false;
 
-        renderOrders();
-        updateStats();
-    }).catch(e => {
-        console.error("Orders fallback failed:", e);
-        showToast('Orders Error', e.message, 'error');
-    });
-});
+                    renderOrders();
+                    updateStats();
+                }).catch(e => {
+                    console.error("Orders fallback failed:", e);
+                    showToast('Orders Error', e.message, 'error');
+                });
+            });
 
             setupDragAndDrop();
         }
@@ -801,6 +802,39 @@ db.collection("orders").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
             removeImage();
         }
 
+
+        function getOrderTime(order) {
+            const t = order.timestamp || order.createdAt || order.date || order.created_at;
+            if (t && typeof t.toMillis === 'function') return t.toMillis();
+            if (t && typeof t.toDate === 'function') return t.toDate().getTime();
+            if (t && typeof t.seconds === 'number') return t.seconds * 1000;
+            if (typeof t === 'number') return t;
+            const parsed = Date.parse(t || '');
+            return Number.isFinite(parsed) ? parsed : 0;
+        }
+
+        function getOrderDateText(order) {
+            const t = order.createdAt || order.timestamp || order.date || order.created_at;
+            if (t && typeof t.toDate === 'function') return t.toDate().toLocaleString('en-IN');
+            if (t && typeof t.seconds === 'number') return new Date(t.seconds * 1000).toLocaleString('en-IN');
+            if (typeof t === 'number') return new Date(t).toLocaleString('en-IN');
+            return order.date || 'Recently placed';
+        }
+
+        function getItemDisplayName(item) {
+            if (!item) return 'Item';
+            const directName = item.name || item.title || item.itemName || item.foodName;
+            if (directName) return directName;
+
+            const itemId = item.id || item.itemId || item.menuItemId;
+            if (itemId && Array.isArray(menu)) {
+                const found = menu.find(m => m.id === itemId || m.name === itemId);
+                if (found && found.name) return found.name;
+            }
+
+            return itemId || 'Item';
+        }
+
         // RENDER MENU & ORDERS
         function renderMenu() {
             const tbody = document.getElementById('menu-table');
@@ -839,9 +873,13 @@ db.collection("orders").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
                             <small>${order.phone || '—'}</small>
                         </div>
                     </td>
-                    <td><div class="order-items-list">${(order.items || []).map(i => `<span class="order-item-tag">${i.name} ×${i.quantity || 1}</span>`).join('')}</div></td>
+                    <td><div class="order-items-list">${(order.items || []).map(i => {
+                            const itemName = getItemDisplayName(i);
+                            const qty = i.quantity || i.qty || 1;
+                            return `<span class="order-item-tag">${itemName} ×${qty}</span>`;
+                        }).join('') || '<span class="order-item-tag">No items</span>'}</div></td>
                     <td><span class="price-tag">₹${order.total || 0}</span></td>
-                    <td><small>${order.date || '—'}</small></td>
+                    <td><small>${getOrderDateText(order)}</small></td>
                     <td>
                         <select class="status-select" onchange="updateOrderStatus('${order.id}', this.value)">
                             <option value="Confirmed" ${order.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
@@ -866,8 +904,16 @@ db.collection("orders").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
         }
 
         async function updateOrderStatus(id, status) {
-            await db.collection("orders").doc(id).update({ status });
-            showToast('Updated', `Status: ${status}`, 'success');
+            try {
+                await db.collection("orders").doc(id).update({
+                    status,
+                    statusUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                showToast('Updated', `Status: ${status}`, 'success');
+            } catch (e) {
+                console.error(e);
+                showToast('Error', 'Could not update status', 'error');
+            }
         }
 
         // FUNCTION TO DELETE ORDER
