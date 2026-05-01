@@ -602,31 +602,46 @@
             });
 
             // Fetch Orders
-            db.collection("orders").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
-                const newOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                // Detect new orders (not on first load)
-                if (!isFirstLoad) {
-                    newOrders.forEach(order => {
-                        if (!knownOrderIds.has(order.id)) {
-                            fireNewOrderNotification(order);
-                        }
-                    });
-                }
-                // Seed known IDs
-                newOrders.forEach(o => knownOrderIds.add(o.id));
-                isFirstLoad = false;
-                orders = newOrders;
-                renderOrders();
-                updateStats();
-            }, (err) => {
-                db.collection("orders").get().then(snapshot => {
-                    orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    orders.forEach(o => knownOrderIds.add(o.id));
-                    isFirstLoad = false;
-                    renderOrders();
-                    updateStats();
-                });
-            });
+db.collection("orders").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+    const newOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    if (!isFirstLoad) {
+        newOrders.forEach(order => {
+            if (!knownOrderIds.has(order.id)) {
+                fireNewOrderNotification(order);
+            }
+        });
+    }
+
+    newOrders.forEach(o => knownOrderIds.add(o.id));
+    isFirstLoad = false;
+
+    orders = newOrders;
+    renderOrders();
+    updateStats();
+
+}, (err) => {
+    console.error("Orders listener error:", err);
+
+    db.collection("orders").get().then(snapshot => {
+        orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        orders.sort((a, b) => {
+            const ta = a.timestamp || Date.parse(a.createdAt || '') || 0;
+            const tb = b.timestamp || Date.parse(b.createdAt || '') || 0;
+            return tb - ta;
+        });
+
+        orders.forEach(o => knownOrderIds.add(o.id));
+        isFirstLoad = false;
+
+        renderOrders();
+        updateStats();
+    }).catch(e => {
+        console.error("Orders fallback failed:", e);
+        showToast('Orders Error', e.message, 'error');
+    });
+});
 
             setupDragAndDrop();
         }
