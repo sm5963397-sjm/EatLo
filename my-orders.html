@@ -598,16 +598,32 @@
             appId: "1:298601218259:web:d8b54f5322139f42881426"
         };
 
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const db = firebase.firestore();
 
-        const savedPhone = localStorage.getItem('customerPhone') || '';
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlPhone = (urlParams.get('phone') || '').replace(/[^0-9]/g, '').slice(-10);
+        const urlOrderId = urlParams.get('id') || localStorage.getItem('lastOrderId') || '';
+        const savedPhone = urlPhone || (localStorage.getItem('customerPhone') || '').replace(/[^0-9]/g, '').slice(-10);
+
         if (savedPhone) {
             document.getElementById('phone-input').value = savedPhone;
         }
 
+        function getPhoneVariants(phone) {
+            const clean = String(phone || '').replace(/[^0-9]/g, '').slice(-10);
+            return Array.from(new Set([
+                clean,
+                '+91' + clean,
+                '91' + clean,
+                '+91 ' + clean
+            ].filter(Boolean)));
+        }
+
         window.searchOrders = async function () {
-            const phone = document.getElementById('phone-input').value.trim();
+            const phone = document.getElementById('phone-input').value.trim().replace(/[^0-9]/g, '').slice(-10);
             const container = document.getElementById('orders-list');
 
             if (!/^[6-9]\d{9}$/.test(phone)) {
@@ -625,28 +641,68 @@
             `;
 
             try {
-                // Phone can be saved as 10 digits or with +91, so check both formats.
-                const phoneVariants = [phone, '+91' + phone];
-                let snapshot;
-                try {
-                    snapshot = await db.collection("orders")
-                        .where("phone", "in", phoneVariants)
-                        .orderBy("createdAt", "desc")
-                        .get();
-                } catch (indexErr) {
-                    console.warn("Index/order issue, fetching without order:", indexErr.message);
-                    snapshot = await db.collection("orders")
-                        .where("phone", "in", phoneVariants)
-                        .get();
+                const ordersMap = new Map();
+                const phoneVariants = getPhoneVariants(phone);
+
+                function addSnapshot(snapshot) {
+                    if (!snapshot || snapshot.empty) return;
+                    snapshot.forEach(doc => {
+                        ordersMap.set(doc.id, { docId: doc.id, ...doc.data() });
+                    });
                 }
 
-                if (snapshot.empty) {
+                if (urlOrderId) {
+                    try {
+                        const directDoc = await db.collection("orders").doc(urlOrderId).get();
+                        if (directDoc.exists) {
+                            const data = directDoc.data();
+                            if (orderMatchesPhone(data, phoneVariants)) {
+                                ordersMap.set(directDoc.id, { docId: directDoc.id, ...data });
+                            }
+                        }
+                    } catch (directErr) {
+                        console.warn("Direct order-id fetch failed:", directErr.message);
+                    }
+                }
+
+                const phoneFields = ["phone", "customerPhone", "phoneNumber", "mobile", "customer.phone"];
+                for (const field of phoneFields) {
+                    for (const variant of phoneVariants) {
+                        try {
+                            const snap = await db.collection("orders").where(field, "==", variant).get();
+                            addSnapshot(snap);
+                        } catch (fieldErr) {
+                            console.warn("Query failed for", field, variant, fieldErr.message);
+                        }
+                    }
+                }
+
+                if (ordersMap.size === 0) {
+                    try {
+                        const recentSnap = await db.collection("orders")
+                            .orderBy("createdAt", "desc")
+                            .limit(50)
+                            .get();
+
+                        recentSnap.forEach(doc => {
+                            const data = doc.data();
+                            if (orderMatchesPhone(data, phoneVariants)) {
+                                ordersMap.set(doc.id, { docId: doc.id, ...data });
+                            }
+                        });
+                    } catch (fallbackErr) {
+                        console.warn("Recent orders fallback failed:", fallbackErr.message);
+                    }
+                }
+
+                const orders = Array.from(ordersMap.values());
+                orders.sort((a, b) => getOrderTime(b) - getOrderTime(a));
+
+                if (orders.length === 0) {
                     renderEmpty();
                     return;
                 }
 
-                const orders = snapshot.docs.map(doc => ({ docId: doc.id, ...doc.data() }));
-                orders.sort((a, b) => getOrderTime(b) - getOrderTime(a));
                 renderOrders(orders);
 
             } catch (err) {
@@ -655,22 +711,42 @@
                     <div class="empty-state">
                         <div class="empty-state-icon"><i class="fas fa-exclamation-triangle"></i></div>
                         <h3>Search Error</h3>
-                        <p>Could not load orders right now. Please check Firebase rules/index and try again.</p>
+                        <p>Could not load orders right now. Check Firebase rules or whether orders are saved in the orders collection.</p>
                     </div>
                 `;
             }
         };
 
+        function orderMatchesPhone(order, variants) {
+            const possibleValues = [
+                order.phone,
+                order.customerPhone,
+                order.phoneNumber,
+                order.mobile,
+                order.contact,
+                order.customer && order.customer.phone,
+                order.customer && order.customer.mobile,
+                order.delivery && order.delivery.phone
+            ];
+
+            const cleanVariants = variants.map(v => String(v || '').replace(/[^0-9]/g, '').slice(-10));
+            return possibleValues.some(value => {
+                const cleanValue = String(value || '').replace(/[^0-9]/g, '').slice(-10);
+                return cleanValue && cleanVariants.includes(cleanValue);
+            });
+        }
+
         function getOrderTime(order) {
-            const t = order.createdAt || order.timestamp || order.date;
+            const t = order.createdAt || order.timestamp || order.date || order.created_at;
             if (t && typeof t.toMillis === 'function') return t.toMillis();
+            if (t && typeof t.toDate === 'function') return t.toDate().getTime();
             if (t && typeof t.seconds === 'number') return t.seconds * 1000;
             const parsed = Date.parse(t || '');
             return Number.isFinite(parsed) ? parsed : 0;
         }
 
         function formatOrderDate(order) {
-            const t = order.createdAt || order.timestamp;
+            const t = order.createdAt || order.timestamp || order.created_at;
             if (t && typeof t.toDate === 'function') return t.toDate().toLocaleString('en-IN');
             if (t && typeof t.seconds === 'number') return new Date(t.seconds * 1000).toLocaleString('en-IN');
             return order.date || 'Recently placed';
@@ -688,12 +764,27 @@
             });
         }
 
+        function getOrderItems(order) {
+            const items = order.items || order.orderItems || order.cart || [];
+            if (!Array.isArray(items)) return [];
+            return items;
+        }
+
+        function getOrderTotal(order) {
+            return order.total || order.totalAmount || order.grandTotal || order.amount || 0;
+        }
+
+        function getOrderAddress(order) {
+            return order.address || order.deliveryAddress || (order.customer && order.customer.address) || 'Delivery address';
+        }
+
         function renderOrders(orders) {
             const container = document.getElementById('orders-list');
             container.innerHTML = orders.map(function (order) {
                 const status = normalizeStatus(order.status);
                 const statusClass = getStatusClass(status);
                 const progressHtml = getProgressHtml(status);
+                const items = getOrderItems(order);
 
                 return `
                     <div class="order-card">
@@ -708,17 +799,18 @@
                         ${progressHtml}
 
                         <div class="order-items">
-                            ${(order.items || []).map(function (item) {
-                    return '<span class="order-item-tag"><i class="fas fa-utensils"></i> ' + escapeHtml(item.name || 'Item') + ' x' + escapeHtml(item.quantity || 1) + '</span>';
-                }).join('')}
+                            ${items.length ? items.map(function (item) {
+                                const itemName = item.name || item.title || item.id || 'Item';
+                                return '<span class="order-item-tag"><i class="fas fa-utensils"></i> ' + escapeHtml(itemName) + ' x' + escapeHtml(item.quantity || item.qty || 1) + '</span>';
+                            }).join('') : '<span class="order-item-tag"><i class="fas fa-utensils"></i> Order items</span>'}
                         </div>
 
                         <div class="order-footer">
                             <div class="order-address">
                                 <i class="fas fa-map-marker-alt"></i>
-                                <span>${escapeHtml(order.address || 'Delivery address')}</span>
+                                <span>${escapeHtml(getOrderAddress(order))}</span>
                             </div>
-                            <div class="order-total">₹${escapeHtml(order.total || 0)}</div>
+                            <div class="order-total">₹${escapeHtml(getOrderTotal(order))}</div>
                         </div>
                     </div>
                 `;
@@ -730,7 +822,7 @@
                 <div class="empty-state">
                     <div class="empty-state-icon"><i class="fas fa-box-open"></i></div>
                     <h3>No Orders Found</h3>
-                    <p>No orders found for this phone number. Try a different number.</p>
+                    <p>No orders found for this phone number. Make sure the same phone number was used during checkout.</p>
                     <a href="index.html"><i class="fas fa-utensils"></i> Order Now</a>
                 </div>
             `;
@@ -767,7 +859,6 @@
                 '</div>';
         }
 
-        // Auto-search if phone saved
         if (savedPhone) {
             window.searchOrders();
         }
