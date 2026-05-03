@@ -623,6 +623,33 @@
             display: block;
         }
 
+        .manual-location-box {
+            display: none;
+            background: #fff8ec;
+            border: 1px solid rgba(255, 107, 53, 0.22);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            margin-bottom: 18px;
+        }
+
+        .manual-location-box.show {
+            display: block;
+        }
+
+        .location-note {
+            font-size: 0.78rem;
+            color: var(--gray);
+            line-height: 1.5;
+            margin-top: 7px;
+        }
+
+        .location-status {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin: -8px 0 14px;
+            line-height: 1.5;
+        }
+
         @media (max-width:1024px) {
             .cart-layout {
                 display: flex;
@@ -747,13 +774,35 @@
                 </div>
 
                 <button class="location-btn" id="location-btn" onclick="getLocation()">
-                    <i class="fas fa-location-crosshairs"></i> Use My Current Location (Required)
+                    <i class="fas fa-location-crosshairs"></i> Use My Current Location (Recommended)
                 </button>
+
+                <p class="location-status" id="location-status">
+                    GPS allow karoge to delivery charge automatic KM ke hisaab se lagega. GPS off ho to address + KM
+                    range manually select karo.
+                </p>
 
                 <div class="form-group">
                     <label>Delivery Address & Landmark *</label>
                     <textarea id="address" maxlength="500" placeholder="House/Flat No, Street, Landmark"
                         oninput="validateCheckout()"></textarea>
+                </div>
+
+                <div class="manual-location-box" id="manual-location-box">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label>Select Your Distance Range *</label>
+                        <select id="manual-km-range" onchange="updateManualDeliveryFee(); validateCheckout();">
+                            <option value="">Select distance range</option>
+                            <option value="10" data-range="0 - 2 KM">0 - 2 KM - ₹10</option>
+                            <option value="20" data-range="2 - 5 KM">2 - 5 KM - ₹20</option>
+                            <option value="30" data-range="5 - 8 KM">5 - 8 KM - ₹30</option>
+                            <option value="50" data-range="8 - 10 KM">8 - 10 KM - ₹50</option>
+                        </select>
+                        <p class="location-note">
+                            Note: Manual KM range customer khud select karega. Admin/delivery person address verify kar
+                            sakta hai.
+                        </p>
+                    </div>
                 </div>
 
                 <!--
@@ -809,8 +858,11 @@
 
         let customerLat = null;
         let customerLng = null;
+        let locationMode = 'manual'; // 'gps' or 'manual'
+        let gpsDistanceKm = null;
+        let manualKmRangeText = '';
         let captchaToken = null; // set by Turnstile callback
-        let currentDeliveryFee = 0; // New variable to track the dynamic fee
+        let currentDeliveryFee = 0; // Dynamic GPS fee OR manual selected fee
 
         // ── Cart: load and sanitize from localStorage ────────────────
         let cart = loadCart();
@@ -1009,21 +1061,73 @@
             const phone = document.getElementById('phone').value.trim();
             const address = document.getElementById('address').value.trim();
             const btn = document.getElementById('checkout-btn');
+            const manualRange = document.getElementById('manual-km-range');
 
             const nameOk = /^[a-zA-Z\s.\-]{2,80}$/.test(name);
             const phoneOk = /^[6-9]\d{9}$/.test(phone);
             const addressOk = address.length >= 5;
 
-            // SECURITY: all must pass including GPS capture and CAPTCHA
+            // GPS mode: coordinates required.
+            // Manual mode: address + manual KM range required.
+            const locationOk =
+                locationMode === 'gps'
+                    ? (customerLat !== null && customerLng !== null)
+                    : (manualRange && manualRange.value !== '');
+
             btn.disabled = !(
                 cart.length > 0 &&
                 nameOk &&
                 phoneOk &&
                 addressOk &&
-                customerLat !== null &&
-                customerLng !== null &&
+                locationOk &&
                 captchaToken !== null  // Turnstile must be solved
             );
+        }
+
+        function showManualLocationBox(message) {
+            locationMode = 'manual';
+            customerLat = null;
+            customerLng = null;
+            gpsDistanceKm = null;
+
+            const box = document.getElementById('manual-location-box');
+            const status = document.getElementById('location-status');
+            const btn = document.getElementById('location-btn');
+
+            if (box) box.classList.add('show');
+            if (status) status.innerText = message || 'Please enter address and select KM range manually.';
+
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-location-crosshairs"></i> Try Current Location Again';
+                btn.disabled = false;
+                btn.style.cssText = '';
+            }
+
+            updateManualDeliveryFee();
+            validateCheckout();
+        }
+
+        function hideManualLocationBox() {
+            const box = document.getElementById('manual-location-box');
+            const manualRange = document.getElementById('manual-km-range');
+            if (box) box.classList.remove('show');
+            if (manualRange) manualRange.value = '';
+            manualKmRangeText = '';
+        }
+
+        function updateManualDeliveryFee() {
+            if (locationMode !== 'manual') return;
+
+            const manualRange = document.getElementById('manual-km-range');
+            if (!manualRange || !manualRange.value) {
+                currentDeliveryFee = 0;
+                manualKmRangeText = '';
+            } else {
+                currentDeliveryFee = Number(manualRange.value);
+                manualKmRangeText = manualRange.options[manualRange.selectedIndex].dataset.range || manualRange.options[manualRange.selectedIndex].text;
+            }
+
+            updateTotals();
         }
 
         // ============================================================
@@ -1040,10 +1144,18 @@
         }
 
         window.getLocation = function () {
-            if (!navigator.geolocation) { showToast('Geolocation not supported', 'error'); return; }
+            if (!navigator.geolocation) {
+                showToast('Geolocation not supported. Please select KM range manually.', 'error');
+                showManualLocationBox('Geolocation not supported. Please enter address and select KM range manually.');
+                return;
+            }
+
             const btn = document.getElementById('location-btn');
+            const status = document.getElementById('location-status');
+
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking location...';
             btn.disabled = true;
+            if (status) status.innerText = 'Getting your current location...';
 
             navigator.geolocation.getCurrentPosition(
                 pos => {
@@ -1056,18 +1168,23 @@
                         btn.innerHTML = '<i class="fas fa-times-circle"></i> Out of Delivery Area';
                         btn.style.background = 'var(--danger)';
                         btn.style.color = 'white';
+                        if (status) status.innerText = `GPS location is ${dist.toFixed(1)}km away. Delivery allowed only within ${MAX_DELIVERY_KM}km.`;
                         showToast(`Sorry, only ${MAX_DELIVERY_KM}km radius. You are ${dist.toFixed(1)}km away.`, 'error');
+
                         customerLat = customerLng = null;
+                        locationMode = 'manual';
+                        gpsDistanceKm = null;
+                        currentDeliveryFee = 0;
+                        updateTotals();
                         validateCheckout();
+
                         setTimeout(() => {
-                            btn.innerHTML = '<i class="fas fa-location-crosshairs"></i> Try Location Again';
-                            btn.disabled = false;
-                            btn.style.cssText = '';
-                        }, 4000);
+                            showManualLocationBox('Your GPS location is out of range. If this is wrong, enter address and select KM range manually.');
+                        }, 1200);
                         return;
                     }
 
-                    // --- STEP 2: Fee Logic Start ---
+                    // Fee Logic: same as your existing GPS delivery charge system
                     if (dist <= 2) {
                         currentDeliveryFee = 10;
                     } else if (dist <= 5) {
@@ -1077,35 +1194,45 @@
                     } else {
                         currentDeliveryFee = 50;
                     }
-                    // --- STEP 2: Fee Logic End ---
+
+                    // GPS mode activated
+                    locationMode = 'gps';
+                    gpsDistanceKm = parseFloat(dist.toFixed(2));
+                    hideManualLocationBox();
 
                     // Store with limited precision (6 decimals ≈ ~10cm accuracy)
                     customerLat = parseFloat(userLat.toFixed(6));
                     customerLng = parseFloat(userLng.toFixed(6));
 
                     const addressField = document.getElementById('address');
-                    addressField.value = 'GPS Location captured ✅\n\nAdd landmark/house number: ';
+                    if (addressField.value.trim().length < 5 || addressField.value.includes('GPS Location captured')) {
+                        addressField.value = 'GPS Location captured ✅\n\nAdd landmark/house number: ';
+                    }
 
                     // Programmatic value change does not always trigger validation,
                     // so we manually fire input and refresh totals/button state.
                     addressField.dispatchEvent(new Event('input'));
                     updateTotals();
                     validateCheckout();
+
                     btn.innerHTML = `<i class="fas fa-check-circle"></i> Location Verified (${dist.toFixed(1)}km)`;
                     btn.style.background = 'linear-gradient(135deg,#06d6a0,#05c793)';
                     btn.style.color = 'white';
-                    showToast('Location verified! 📍 You are within the delivery zone.');
+                    if (status) status.innerText = `GPS verified. Delivery fee ₹${currentDeliveryFee} applied automatically.`;
+                    showToast('Location verified! 📍 Delivery fee updated.');
                 },
                 err => {
-                    btn.innerHTML = '<i class="fas fa-location-crosshairs"></i> Use My Current Location';
-                    btn.disabled = false;
-                    btn.style.cssText = '';
                     customerLat = customerLng = null;
-                    validateCheckout();
+                    gpsDistanceKm = null;
+                    showManualLocationBox(
+                        err.code === err.PERMISSION_DENIED
+                            ? 'Location permission denied. Please enter address and select KM range manually.'
+                            : 'Could not get location. Please enter address and select KM range manually.'
+                    );
                     showToast(
                         err.code === err.PERMISSION_DENIED
-                            ? 'Please enable Location Permissions to place an order.'
-                            : 'Could not get location. Ensure GPS is on.',
+                            ? 'Location denied. Manual address option enabled.'
+                            : 'Could not get location. Manual address option enabled.',
                         'error'
                     );
                 },
@@ -1136,7 +1263,21 @@
             if (!/^[a-zA-Z\s.\-]{2,80}$/.test(name)) { showToast('Please enter a valid name', 'error'); return; }
             if (!/^[6-9]\d{9}$/.test(phone)) { showToast('Enter a valid 10-digit mobile number', 'error'); return; }
             if (address.length < 5) { showToast('Please enter your delivery address', 'error'); return; }
-            if (customerLat === null || customerLng === null) { showToast('Location verification required', 'error'); return; }
+
+            const manualRange = document.getElementById('manual-km-range');
+            if (locationMode === 'gps') {
+                if (customerLat === null || customerLng === null) {
+                    showToast('Location verification required', 'error');
+                    return;
+                }
+            } else {
+                if (!manualRange || !manualRange.value) {
+                    showToast('Please select your distance range', 'error');
+                    return;
+                }
+                updateManualDeliveryFee();
+            }
+
             if (!captchaToken) { showToast('Please complete the CAPTCHA', 'error'); return; }
 
             const btn = document.getElementById('checkout-btn');
@@ -1149,10 +1290,17 @@
                 name,
                 phone,
                 address,
-                lat: customerLat,
-                lng: customerLng,
+                lat: locationMode === 'gps' ? customerLat : null,
+                lng: locationMode === 'gps' ? customerLng : null,
+                locationType: locationMode === 'gps' ? 'GPS' : 'Manual',
+                gpsDistanceKm: locationMode === 'gps' ? gpsDistanceKm : null,
+                manualKmRange: locationMode === 'manual' ? manualKmRangeText : '',
+                deliveryFee: currentDeliveryFee,
+                note: locationMode === 'manual'
+                    ? 'Customer entered address manually and selected KM range manually. Verify before delivery.'
+                    : '',
                 captchaToken,
-                // Fix: We now use currentDeliveryFee instead of a hardcoded 20
+                // Dynamic fee: GPS calculated fee OR manual selected fee
                 total: cart.reduce((s, i) => s + i.price * (i.quantity || 1), 0) + currentDeliveryFee,
                 items: cart.map(item => ({
                     id: item.id,           // server validates this exists in menu
